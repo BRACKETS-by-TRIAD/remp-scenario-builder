@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "jointjs": "^2.1.4",
     "moment": "^2.22.2",
     "qs": "^6.5.2",
     "remove-accents": "^0.4.2",
