@@ -10,7 +10,7 @@ export class PortModel extends BasePortModel {
 	position: string | "top" | "bottom" | "left" | "right";
 
 	constructor(pos: string = "top") {
-		super(pos, "segment");
+		super(pos, "trigger");
 		this.position = pos;
 	}
 
@@ -27,5 +27,14 @@ export class PortModel extends BasePortModel {
 
 	createLinkModel(): LinkModel {
 		return new DefaultLinkModel();
+	}
+
+	link(port: PortModel): LinkModel {
+		let link = this.createLinkModel();
+
+		link.setSourcePort(this);
+		link.setTargetPort(port);
+		
+		return link;
 	}
 }

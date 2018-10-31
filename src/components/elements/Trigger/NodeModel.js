@@ -3,10 +3,9 @@ import { PortModel } from "./PortModel";
 
 export class NodeModel extends BaseNodeModel {
 	constructor() {
-		super("segment");
-		this.addPort(new PortModel("top"));
-		this.addPort(new PortModel("left"));
-		this.addPort(new PortModel("bottom"));
+		super("trigger");
+		
+		this.name = "Trigger";
 		this.addPort(new PortModel("right"));
 	}
 }

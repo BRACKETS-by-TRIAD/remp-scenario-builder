@@ -1,7 +1,6 @@
 import {
 	AbstractNodeFactory,
-	DiagramEngine,
-	NodeModel as BaseNodeModel
+	DiagramEngine
 } from "storm-react-diagrams";
 
 import { NodeWidget } from "./NodeWidget";
@@ -10,11 +9,11 @@ import * as React from "react";
 
 export class NodeFactory extends AbstractNodeFactory {
 	constructor() {
-		super("segment");
+		super("trigger");
 	}
 
-	generateReactWidget(diagramEngine: DiagramEngine, node: BaseNodeModel): JSX.Element {
-		return <NodeWidget node={node} />;
+	generateReactWidget(diagramEngine: DiagramEngine, node: NodeModel): JSX.Element {
+		return <NodeWidget node={node} classBaseName="square-node" className="trigger-node" />;
 	}
 
 	getNewInstance() {

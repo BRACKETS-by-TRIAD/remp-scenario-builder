@@ -70,16 +70,6 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 					style={{
 						position: "absolute",
 						zIndex: 10,
-						left: this.props.size / 2 - 8,
-						top: -8
-					}}
-				>
-					<PortWidget name="top" node={this.props.node} />
-				</div>
-				<div
-					style={{
-						position: "absolute",
-						zIndex: 10,
 						left: this.props.size - 8,
 						top: this.props.size / 2 - 8
 					}}

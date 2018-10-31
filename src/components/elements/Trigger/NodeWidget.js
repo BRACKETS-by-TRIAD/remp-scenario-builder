@@ -1,9 +1,13 @@
 import * as React from "react";
+import * as _ from "lodash";
+import { PortWidget, DefaultPortLabel } from "storm-react-diagrams";
 import { NodeModel } from "./NodeModel";
-import { PortWidget } from "storm-react-diagrams";
+
 
 export interface NodeWidgetProps {
 	node: NodeModel;
+	className: string;
+	classBaseName: string;
 	size?: number;
 }
 
@@ -20,81 +24,26 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 		this.state = {};
 	}
 
+	bem(selector: string): string {
+		return this.props.classBaseName + selector + " " + this.props.className + selector + " ";
+	}
+
+	getClassName() {
+		return this.props.classBaseName + " " +this.props.className;
+	}
+
 	render() {
 		return (
-			<div
-				className={"-node"}
-				style={{
-					position: "relative",
-					width: this.props.size,
-					height: this.props.size
-				}}
-			>
-				<svg
-					width={this.props.size}
-					height={this.props.size}
-					dangerouslySetInnerHTML={{
-						__html:
-							`
-          <g id="Layer_1">
-          </g>
-          <g id="Layer_2">
-            <polygon fill="purple" stroke="#000000" stroke-width="3" stroke-miterlimit="10" points="10,` +
-							this.props.size / 2 +
-							` ` +
-							this.props.size / 2 +
-							`,10 ` +
-							(this.props.size - 10) +
-							`,` +
-							this.props.size / 2 +
-							` ` +
-							this.props.size / 2 +
-							`,` +
-							(this.props.size - 10) +
-							` "/>
-          </g>
-        `
-					}}
-				/>
-				<div
-					style={{
-						position: "absolute",
-						zIndex: 10,
-						top: this.props.size / 2 - 8,
-						left: -8
-					}}
-				>
-					<PortWidget name="left" node={this.props.node} />
+			<div className={this.getClassName()} 
+				style={{ background: this.props.node.color }}>
+				
+				<div className={this.bem("__title")}>
+					<div className={this.bem("__name")}>{this.props.node.name}</div>
 				</div>
-				<div
-					style={{
-						position: "absolute",
-						zIndex: 10,
-						left: this.props.size / 2 - 8,
-						top: -8
-					}}
-				>
-					<PortWidget name="top" node={this.props.node} />
-				</div>
-				<div
-					style={{
-						position: "absolute",
-						zIndex: 10,
-						left: this.props.size - 8,
-						top: this.props.size / 2 - 8
-					}}
-				>
-					<PortWidget name="right" node={this.props.node} />
-				</div>
-				<div
-					style={{
-						position: "absolute",
-						zIndex: 10,
-						left: this.props.size / 2 - 8,
-						top: this.props.size - 8
-					}}
-				>
-					<PortWidget name="bottom" node={this.props.node} />
+				<div className={this.bem("__ports")}>
+					<div className={this.bem("__out")}>
+						<PortWidget name="right" node={this.props.node} />
+					</div>
 				</div>
 			</div>
 		);

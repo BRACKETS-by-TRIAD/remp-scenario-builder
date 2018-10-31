@@ -1,0 +1,13 @@
+.action-node {
+    background-color: rgb(30, 30, 30);
+    color: white;
+    border: solid 2px black;
+  
+    &__title {
+      background: rgba(black, 0.3);
+    }
+
+    &__ports {
+      background-image: linear-gradient(rgba(black, 0.1), rgba(black, 0.2));
+    }
+}

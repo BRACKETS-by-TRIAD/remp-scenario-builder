@@ -9,8 +9,11 @@ import {
 
 // import the custom models
 import {
-	SimplePortFactory, 
-	Segment
+    SimplePortFactory,
+    Action,
+    Segment,
+    Trigger,
+    Wait
 } from "./elements";
 
 import "./sass/main.scss";
@@ -24,53 +27,52 @@ export class Application {
 		this.diagramEngine.installDefaultFactories();
 		this.activeModel = new DiagramModel();
 
-		this.newModel();
-		this.newSegmentModel();
+		// this.activeModel.setGridSize(50);
+
+		this.registerModels();
+		this.renderDefault();
 
 		this.diagramEngine.setDiagramModel(this.activeModel);
 	}
 
-	newModel() {
-		//3-A) create a default node
-		const node1 = new DefaultNodeModel("Node 1", "rgb(0,192,255)");
-		let port = node1.addOutPort("Out");
-		node1.setPosition(100, 100);
-
-		//3-B) create another default node
-		const node2 = new DefaultNodeModel("Node 2", "rgb(192,255,0)");
-		let port2 = node2.addInPort("In");
-		node2.setPosition(400, 100);
-
-		// link the ports
-		let link1 = port.link(port2);
-		this.activeModel.addAll(node1, node2, link1);
-	}
-
-	newSegmentModel() {
-		// register some other factories as well
-		this.diagramEngine.registerPortFactory(new SimplePortFactory("Segment", config => new Segment.PortModel()));
+	registerModels() {
+		this.diagramEngine.registerPortFactory(new SimplePortFactory("action", config => new Action.PortModel()));
+		this.diagramEngine.registerNodeFactory(new Action.NodeFactory());
+		
+		this.diagramEngine.registerPortFactory(new SimplePortFactory("segment", config => new Segment.PortModel()));
 		this.diagramEngine.registerNodeFactory(new Segment.NodeFactory());
 
+		this.diagramEngine.registerPortFactory(new SimplePortFactory("trigger", config => new Trigger.PortModel()));
+		this.diagramEngine.registerNodeFactory(new Trigger.NodeFactory());
 
-		//3-A) create a default node
-		const node1 = new DefaultNodeModel("Node 1", "rgb(0,192,255)");
-		const port1 = node1.addOutPort("Out");
+		this.diagramEngine.registerPortFactory(new SimplePortFactory("wait", config => new Wait.PortModel()));
+		this.diagramEngine.registerNodeFactory(new Wait.NodeFactory());
+	}
+
+	renderDefault() {
+
+		const node1 = new Trigger.NodeModel();
 		node1.setPosition(100, 150);
 
-		//3-B) create our new custom node
-		const node2 = new Segment.NodeModel();
-		node2.setPosition(250, 108);
+		const node2 = new Action.NodeModel();
+		node2.setPosition(300, 150);
 
-		const node3 = new DefaultNodeModel("Node 3", "red");
-		const port3 = node3.addInPort("In");
+		const node3 = new Action.NodeModel();
 		node3.setPosition(500, 150);
 
-		//3-C) link the 2 nodes together
-		const link1 = port1.link(node2.getPort("left"));
-		const link2 = port3.link(node2.getPort("right"));
+		const link1 = node1.getPort("right").link(node2.getPort("left"));
+		const link2 = node3.getPort("left").link(node2.getPort("right"));
 
-		//4) add the models to the root graph
-		this.activeModel.addAll(node1, node2, node3, link1, link2);
+		link1.addLabel("Label 1");
+		link2.addLabel("Label 2");
+
+		const models = this.activeModel.addAll(node1, node2, node3, link1, link2);
+
+		// models.forEach(item => {
+		// 	item.addListener({
+		// 		selectionChanged: console.log('selectionChanged')
+		// 	});
+		// });
 	}
 
 	getActiveDiagram(): DiagramModel {
