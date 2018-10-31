@@ -36,6 +36,7 @@ export class Application {
 		this.payload = {
 			triggers: [
 				{	
+					id: 'abcd',
 					title: 'Trigger 1',
 					type: 'event',
 					event: {
@@ -49,14 +50,64 @@ export class Application {
 							wait: {
 								minutes: 5,
 								descendants: [
-									'abcd2', //FIXME: uuids or element objects? 
-									'abcd3'
+									'abcd12', //FIXME: uuids or element objects? 
+									'abcd12'
+								]
+							}
+						},
+						{
+							id: 'abcd2',
+							title: 'Segment 1',
+							type: 'segment',
+							segment: {
+								code: 'segment1',
+								descendants_positive: [
+									'abcd21', //FIXME: uuids or element objects? 
+									'abcd22'
+								],
+								descendants_negative: [
+									'abcd23', //FIXME: uuids or element objects? 
+									'abcd24'
+								]
+							}
+						},
+						{
+							id: 'abcd3',
+							title: 'Action 1',
+							type: 'action',
+							action: {
+								type: 'email',
+								email: {
+									code: 'mail_template_123'
+								},
+								descendants:  [
+									'abcd31', //FIXME: uuids or element objects? 
+									'abcd32'
 								]
 							}
 						}
 					],
 				}
-			]
+			],
+			// FIXME: other elements?
+			visual: {
+				'abcd': {
+					x: 100,
+					y: 150
+				},
+				'abcd1': {
+					x: 200,
+					y: 150
+				},
+				'abcd2': {
+					x: 200,
+					y: 300
+				},
+				'abcd3': {
+					x: 200,
+					y: 25
+				},
+			}
 		};
 
 		this.registerModels();
@@ -82,20 +133,27 @@ export class Application {
 	renderPayload() {
 		const nodes = _.flatMap(this.payload.triggers, ((trigger) => {
 			const nodes = [];
+			const triggerVisual = this.payload.visual[trigger.id];
 
 			const triggerNode = new Trigger.NodeModel(); //trigger.title, trigger.event.name
-			triggerNode.setPosition(100, 150);
+			triggerNode.setPosition(triggerVisual.x, triggerVisual.y);
 
 
-			const elementNodes = trigger.elements.map(function(element, index) {
-				if(element.type == 'wait') {
-					const node  =  new Wait.NodeModel();
-					const order = index+2;
+			const elementNodes = trigger.elements.map((element) => {
+				let node = null;
+				const visual = this.payload.visual[element.id];
 
-					node.setPosition(order*100, 150);
-
-					return node;
+				if(element.type == 'action') {
+					node = new Action.NodeModel();
+				} else if(element.type == 'segment') {
+					node = new Segment.NodeModel();
+				} else if(element.type == 'wait') {
+					node = new Wait.NodeModel();
 				}
+
+				node.setPosition(visual.x, visual.y);
+
+				return node;
 			});
 
 			const links = elementNodes.map(function(element) {
