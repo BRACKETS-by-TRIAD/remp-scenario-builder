@@ -1,24 +1,21 @@
 import * as React from "react";
-import { DiamondNodeModel } from "./DiamondNodeModel";
+import { NodeModel } from "./NodeModel";
 import { PortWidget } from "storm-react-diagrams";
 
-export interface DiamonNodeWidgetProps {
-	node: DiamondNodeModel;
+export interface NodeWidgetProps {
+	node: NodeModel;
 	size?: number;
 }
 
-export interface DiamonNodeWidgetState {}
+export interface NodeWidgetState {}
 
-/**
- * @author Dylan Vorster
- */
-export class DiamonNodeWidget extends React.Component<DiamonNodeWidgetProps, DiamonNodeWidgetState> {
-	static defaultProps: DiamonNodeWidgetProps = {
+export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
+	static defaultProps: NodeWidgetProps = {
 		size: 150,
 		node: null
 	};
 
-	constructor(props: DiamonNodeWidgetProps) {
+	constructor(props: NodeWidgetProps) {
 		super(props);
 		this.state = {};
 	}
@@ -26,7 +23,7 @@ export class DiamonNodeWidget extends React.Component<DiamonNodeWidgetProps, Dia
 	render() {
 		return (
 			<div
-				className={"diamond-node"}
+				className={"-node"}
 				style={{
 					position: "relative",
 					width: this.props.size,

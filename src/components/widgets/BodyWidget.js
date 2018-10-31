@@ -1,9 +1,21 @@
 import * as React from "react";
 import * as _ from "lodash";
+
+import { 
+	DiagramWidget 
+} from "storm-react-diagrams";
+
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./../Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget } from "storm-react-diagrams";
+
+import {
+	Action,
+	Event,
+	Segment,
+	Trigger,
+	Wait
+} from "./../elements";
 
 export interface BodyWidgetProps {
 	app: Application;
@@ -25,9 +37,37 @@ export class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState
 				</div>
 				<div className="content">
 					<TrayWidget>
-						<TrayItemWidget model={{ type: "in" }} name="In Node" color="rgb(192,255,0)" />
-						<TrayItemWidget model={{ type: "out" }} name="Out Node" color="rgb(0,192,255)" />
+						<TrayItemWidget 
+							model={{ type: "action" }} 
+							name="Action" 
+							color="rgb(192,255,0)" 
+						/>
+
+						<TrayItemWidget 
+							model={{ type: "event" }} 
+							name="Event" 
+							color="rgb(0,192,255)" 
+						/>
+
+						<TrayItemWidget 
+							model={{ type: "segment" }} 
+							name="Segment" 
+							color="rgb(0,192,255)" 
+						/>
+
+						<TrayItemWidget 
+							model={{ type: "trigger" }} 
+							name="Trigger" 
+							color="rgb(0,192,255)" 
+						/>
+
+						<TrayItemWidget 
+							model={{ type: "wait" }} 
+							name="Wait" 
+							color="rgb(0,192,255)" 
+						/>
 					</TrayWidget>
+					
 					<div
 						className="diagram-layer"
 						onDrop={event => {
@@ -38,14 +78,18 @@ export class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState
 									.getDiagramModel()
 									.getNodes()
 							).length;
-
+							
 							var node = null;
-							if (data.type === "in") {
-								node = new DefaultNodeModel("Node " + (nodesCount + 1), "rgb(192,255,0)");
-								node.addInPort("In");
-							} else {
-								node = new DefaultNodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
-								node.addOutPort("Out");
+							if (data.type === "action") {
+								node = new Action.NodeModel("Node " + (nodesCount + 1), "rgb(192,255,0)");
+							} else if(data.type === "event") {
+								node = new Event.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
+							} else if(data.type === "segment") {
+								node = new Segment.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
+							} else if(data.type === "trigger") {
+								node = new Trigger.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
+							} else if(data.type === "wait") {
+								node = new Wait.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
 							}
 							var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
 							node.x = points.x;

@@ -8,12 +8,10 @@ import {
 } from "storm-react-diagrams";
 
 // import the custom models
-import { 
-	DiamondNodeModel, 
-	DiamondNodeFactory, 
+import {
 	SimplePortFactory, 
-	DiamondPortModel 
-} from "./elements/DiamondNode";
+	Segment
+} from "./elements";
 
 import "./sass/main.scss";
 
@@ -24,12 +22,10 @@ export class Application {
 	constructor() {
 		this.diagramEngine = new DiagramEngine();
 		this.diagramEngine.installDefaultFactories();
-
 		this.activeModel = new DiagramModel();
-		this.diagramEngine.setDiagramModel(this.activeModel);
 
 		this.newModel();
-		this.newDiamondModel();
+		this.newSegmentModel();
 
 		this.diagramEngine.setDiagramModel(this.activeModel);
 	}
@@ -50,10 +46,10 @@ export class Application {
 		this.activeModel.addAll(node1, node2, link1);
 	}
 
-	newDiamondModel() {
+	newSegmentModel() {
 		// register some other factories as well
-		this.diagramEngine.registerPortFactory(new SimplePortFactory("diamond", config => new DiamondPortModel()));
-		this.diagramEngine.registerNodeFactory(new DiamondNodeFactory());
+		this.diagramEngine.registerPortFactory(new SimplePortFactory("Segment", config => new Segment.PortModel()));
+		this.diagramEngine.registerNodeFactory(new Segment.NodeFactory());
 
 
 		//3-A) create a default node
@@ -62,7 +58,7 @@ export class Application {
 		node1.setPosition(100, 150);
 
 		//3-B) create our new custom node
-		const node2 = new DiamondNodeModel();
+		const node2 = new Segment.NodeModel();
 		node2.setPosition(250, 108);
 
 		const node3 = new DefaultNodeModel("Node 3", "red");
