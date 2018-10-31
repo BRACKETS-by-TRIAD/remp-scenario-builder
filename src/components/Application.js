@@ -2,10 +2,14 @@ import {
 	DiagramEngine,
 	DiagramModel,
 	DefaultNodeModel,
+	LinkModel,
+	NodeModel
 	// LinkModel,
 	// DefaultPortModel,
 	// DiagramWidget
 } from "storm-react-diagrams";
+
+import * as _ from "lodash";
 
 // import the custom models
 import {
@@ -29,8 +33,34 @@ export class Application {
 
 		// this.activeModel.setGridSize(50);
 
+		this.payload = {
+			triggers: [
+				{	
+					title: 'Trigger 1',
+					type: 'event',
+					event: {
+						name: 'registration'
+					},
+					elements: [
+						{
+							id: 'abcd1',
+							title: 'Wait 1',
+							type: 'wait',
+							wait: {
+								minutes: 5,
+								descendants: [
+									'abcd2', //FIXME: uuids or element objects? 
+									'abcd3'
+								]
+							}
+						}
+					],
+				}
+			]
+		};
+
 		this.registerModels();
-		this.renderDefault();
+		this.renderPayload();
 
 		this.diagramEngine.setDiagramModel(this.activeModel);
 	}
@@ -49,26 +79,47 @@ export class Application {
 		this.diagramEngine.registerNodeFactory(new Wait.NodeFactory());
 	}
 
-	renderDefault() {
+	renderPayload() {
+		const nodes = _.flatMap(this.payload.triggers, ((trigger) => {
+			const nodes = [];
 
-		const node1 = new Trigger.NodeModel();
-		node1.setPosition(100, 150);
+			const triggerNode = new Trigger.NodeModel(); //trigger.title, trigger.event.name
+			triggerNode.setPosition(100, 150);
 
-		const node2 = new Action.NodeModel();
-		node2.setPosition(300, 150);
 
-		const node3 = new Action.NodeModel();
-		node3.setPosition(500, 150);
+			const elementNodes = trigger.elements.map(function(element, index) {
+				if(element.type == 'wait') {
+					const node  =  new Wait.NodeModel();
+					const order = index+2;
 
-		const link1 = node1.getPort("right").link(node2.getPort("left"));
-		const link2 = node3.getPort("left").link(node2.getPort("right"));
+					node.setPosition(order*100, 150);
 
-		link1.addLabel("Label 1");
-		link2.addLabel("Label 2");
+					return node;
+				}
+			});
 
-		const models = this.activeModel.addAll(node1, node2, node3, link1, link2);
+			const links = elementNodes.map(function(element) {
+				return triggerNode.getPort("right").link(element.getPort("left"));
+			})
 
-		// models.forEach(item => {
+
+			return [ triggerNode, ...elementNodes, ...links ];
+		}));
+
+		//FIXME?
+		// console.log(nodes);
+		// const models = this.activeModel.addAll(nodes);
+
+
+		nodes.forEach(model => {
+			if (model instanceof LinkModel) {
+				this.activeModel.addLink(model);
+			} else if (model instanceof NodeModel) {
+				this.activeModel.addNode(model);
+			}
+		});
+
+		// nodes.forEach(item => {
 		// 	item.addListener({
 		// 		selectionChanged: console.log('selectionChanged')
 		// 	});
