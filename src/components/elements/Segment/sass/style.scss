@@ -1,13 +1,13 @@
 
-$nodeColor: $lightViolet;
+$nodeColor: $lightRed;
 
 .srd-node--selected {
-  .square-node.action-node .node-container { 
+  .diamond-node.segment-node .node-container { 
     box-shadow: 0 0 10px rgba(0,0,0, 0.5), 0 0 40px $nodeColor;
   }
 }
 
-.action-node {
+.segment-node {
   .node-container{
     border: solid 2px $nodeColor;
   }
@@ -16,7 +16,7 @@ $nodeColor: $lightViolet;
     color: $nodeColor;
   }
 
-  &__left, &__right{
+  &__left, &__right, &__bottom{
     .port {
       box-shadow: 0 0 10px $nodeColor;
 

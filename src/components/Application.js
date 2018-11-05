@@ -37,7 +37,7 @@ export class Application {
 			triggers: [
 				{	
 					id: 'abcd',
-					title: 'Trigger 1',
+					title: 'On event registration',
 					type: 'event',
 					event: {
 						name: 'registration'
@@ -45,7 +45,7 @@ export class Application {
 					elements: [
 						{
 							id: 'abcd1',
-							title: 'Wait 1',
+							title: 'Wait (1 minute)',
 							type: 'wait',
 							wait: {
 								minutes: 5,
@@ -73,7 +73,7 @@ export class Application {
 						},
 						{
 							id: 'abcd3',
-							title: 'Action 1',
+							title: 'Send registration email',
 							type: 'action',
 							action: {
 								type: 'email',
@@ -96,15 +96,15 @@ export class Application {
 					y: 150
 				},
 				'abcd1': {
-					x: 200,
+					x: 400,
 					y: 150
 				},
 				'abcd2': {
-					x: 200,
+					x: 400,
 					y: 300
 				},
 				'abcd3': {
-					x: 200,
+					x: 400,
 					y: 25
 				},
 			}
@@ -135,7 +135,7 @@ export class Application {
 			const nodes = [];
 			const triggerVisual = this.payload.visual[trigger.id];
 
-			const triggerNode = new Trigger.NodeModel(); //trigger.title, trigger.event.name
+			const triggerNode = new Trigger.NodeModel(trigger); //trigger.title, trigger.event.name
 			triggerNode.setPosition(triggerVisual.x, triggerVisual.y);
 
 
@@ -144,11 +144,11 @@ export class Application {
 				const visual = this.payload.visual[element.id];
 
 				if(element.type === 'action') {
-					node = new Action.NodeModel();
+					node = new Action.NodeModel(element);
 				} else if(element.type === 'segment') {
-					node = new Segment.NodeModel();
+					node = new Segment.NodeModel(element);
 				} else if(element.type === 'wait') {
-					node = new Wait.NodeModel();
+					node = new Wait.NodeModel(element);
 				}
 
 				node.setPosition(visual.x, visual.y);

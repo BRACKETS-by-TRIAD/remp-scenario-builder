@@ -1,74 +1,62 @@
-.square-node {
-    background-color: rgb(30, 30, 30);
+/*---  Colors  ---*/
+$red              : #DB2828;
+$orange           : #F2711C;
+$yellow           : #FBBD08;
+$olive            : #B5CC18;
+$green            : #21BA45;
+$teal             : #00B5AD;
+$blue             : #2185D0;
+$violet           : #6435C9;
+$purple           : #A333C8;
+$pink             : #E03997;
+$brown            : #A5673F;
+$grey             : #767676;
+$black            : #1B1C1D;
+
+/*---  Light Colors  ---*/
+$lightRed         : #FF695E;
+$lightOrange      : #FF851B;
+$lightYellow      : #FFE21F;
+$lightOlive       : #D9E778;
+$lightGreen       : #2ECC40;
+$lightTeal        : #6DFFFF;
+$lightBlue        : #54C8FF;
+$lightViolet      : #A291FB;
+$lightPurple      : #DC73FF;
+$lightPink        : #FF8EDF;
+$lightBrown       : #D67C1C;
+$lightGrey        : #DCDDDE;
+$lightBlack       : #545454;
+
+.square-node, .round-node, .diamond-node {
+  background-color: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 150px;
+
+  .node-container{
+    display: flex;
+    align-items: center;
+
+    width: 50px;
+    height: 50px;
     border-radius: 5px;
-    font-family: sans-serif;
-    color: white;
-    border: solid 2px black;
+
     overflow: visible;
-    font-size: 11px;
-  
-    &__title {
-      background: rgba(black, 0.3);
-      display: flex;
-      white-space: nowrap;
-      text-align: center;
-      > * {
-        align-self: center;
-      }
-      .fa {
-        padding: 5px;
-        opacity: 0.2;
-        cursor: pointer;
-  
-        &:hover {
-          opacity: 1.0;
-        }
-      }
-    }
-  
-    &__name {
-      flex-grow: 1;
-      padding: 5px 5px;
-    }
-  
-    &__ports {
-      display: flex;
-      background-image: linear-gradient(rgba(black, 0.1), rgba(black, 0.2));
-    }
-  
-    &__in, &__out{
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    &__in {
-        align-items: flex-start;
-    } 
-    
-    &__out{
-        align-items: flex-end;
-    }
-}
-
-.round-node {
-  background-color: rgb(30, 30, 30);
-  font-family: sans-serif;
-  color: white;
-  border: solid 2px black;
-  overflow: visible;
-  font-size: 11px;
-
-  width: 100px;
-  height: 100px;
-  overflow: hidden;
-  border-radius: 100px;
+    // background-color: white;
+  }
 
   &__title {
-    background: rgba(black, 0.3);
     display: flex;
-    white-space: nowrap;
+    // white-space: nowrap;
     text-align: center;
+
+    font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    font-size: 14px;
+
     > * {
       align-self: center;
     }
@@ -85,25 +73,82 @@
 
   &__name {
     flex-grow: 1;
-    padding: 5px 5px;
+    padding: 5px 0;
   }
 
   &__ports {
     display: flex;
-    background-image: linear-gradient(rgba(black, 0.1), rgba(black, 0.2));
+    background-image: none;
+    width: 100%;
+    
   }
 
-  &__in, &__out{
+  &__left, &__right, &__bottom {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+
+    .port {
+      box-shadow: 0 0 10px #a291fb;
+      border-radius: 15px;
+      position: relative;
+      background: white;
+      &:hover, &.selected {
+        background:#a291fb;
+      }
+    }
   }
 
-  &__in {
+  &__left {
       align-items: flex-start;
+      .port {
+        left: -7.5px;
+      }
   } 
   
-  &__out{
+  &__right{
       align-items: flex-end;
+      .port {
+        right: -7.5px;
+      }
+  }
+
+  &__bottom{
+    align-items: center;
+    .port {
+      bottom: -7.5px;
+    }
   }
 }
+
+.round-node {
+  .node-container{
+    // width: 75px;
+    // height: 75px;
+    // border-radius: 75px;
+    border-radius: 50px;
+  }
+}
+
+.diamond-node {
+  .node-container {
+    position: relative;
+  }
+
+  &__bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    .port {
+      box-shadow: 0 0 10px #a291fb;
+      border-radius: 15px;
+      position: relative;
+      background: white;
+      &:hover, &.selected {
+        background:#a291fb;
+      }
+    }
+  }
+}
+

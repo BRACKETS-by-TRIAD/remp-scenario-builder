@@ -1,16 +1,28 @@
-.wait-node {
-    background-color: rgb(30, 30, 30);
-    color: white;
-  
-    &__title {
-      background: rgba(black, 0.3);
-    }
-  
-    &__name {
 
+$nodeColor: $lightOrange;
+
+.srd-node--selected {
+  .round-node.wait-node .node-container { 
+    box-shadow: 0 0 10px rgba(0,0,0, 0.5), 0 0 40px $nodeColor;
+  }
+}
+
+.wait-node {
+  .node-container{
+    border: solid 2px $nodeColor;
+  }
+
+  &__title {
+    color: $nodeColor;
+  }
+
+  &__left, &__right{
+    .port {
+      box-shadow: 0 0 10px $nodeColor;
+
+      &:hover, &.selected {
+        background: $nodeColor;
+      }
     }
-  
-    &__ports {
-      background-image: linear-gradient(rgba(black, 0.1), rgba(black, 0.2));
-    }
+  }
 }
