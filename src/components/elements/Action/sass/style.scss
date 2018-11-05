@@ -3,7 +3,7 @@ $nodeColor: $lightViolet;
 
 .srd-node--selected {
   .square-node.action-node .node-container { 
-    box-shadow: 0 0 10px rgba(0,0,0, 0.5), 0 0 40px $nodeColor;
+    box-shadow: 0 0 10px $nodeColor;
   }
 }
 
