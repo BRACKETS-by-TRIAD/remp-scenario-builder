@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as _ from "lodash";
 import { PortWidget, DefaultPortLabel } from "storm-react-diagrams";
 import { NodeModel } from "./NodeModel";
 

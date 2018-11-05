@@ -143,11 +143,11 @@ export class Application {
 				let node = null;
 				const visual = this.payload.visual[element.id];
 
-				if(element.type == 'action') {
+				if(element.type === 'action') {
 					node = new Action.NodeModel();
-				} else if(element.type == 'segment') {
+				} else if(element.type === 'segment') {
 					node = new Segment.NodeModel();
-				} else if(element.type == 'wait') {
+				} else if(element.type === 'wait') {
 					node = new Wait.NodeModel();
 				}
 
