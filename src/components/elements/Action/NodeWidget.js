@@ -1,5 +1,6 @@
 import * as React from "react";
 import { PortWidget, DefaultPortLabel } from "storm-react-diagrams";
+import ActionIcon from '@material-ui/icons/Star';
 import { NodeModel } from "./NodeModel";
 
 
@@ -34,9 +35,12 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 			<div className={this.getClassName()} 
 				style={{ background: this.props.node.color }}>				
 				<div className="node-container">
+					<div className={this.bem("__icon")}>
+						<ActionIcon />
+					</div>
+
 					<div className={this.bem("__ports")}>
 						<div className={this.bem("__left")}>
-
 							<PortWidget name="left" node={this.props.node} />
 						</div>
 						<div className={this.bem("__right")}>

@@ -1,5 +1,7 @@
 import * as React from "react";
 import { PortWidget, DefaultPortLabel } from "storm-react-diagrams";
+// import WaitIcon from '@material-ui/icons/Timer';
+import WaitIcon from '@material-ui/icons/AccessAlarm';
 import { NodeModel } from "./NodeModel";
 
 
@@ -34,6 +36,9 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 			<div className={this.getClassName()} 
 				style={{ background: this.props.node.color }}>				
 				<div className="node-container">
+					<div className={this.bem("__icon")}>
+						<WaitIcon />
+					</div>
 					<div className={this.bem("__ports")}>
 						<div className={this.bem("__left")}>
 

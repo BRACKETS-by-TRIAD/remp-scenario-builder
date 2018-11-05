@@ -8,6 +8,8 @@ import {
 	NodeModel
 } from "storm-react-diagrams";
 
+import Button from '@material-ui/core/Button';
+
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./../Application";
 import { TrayItemWidget } from "./TrayItemWidget";
@@ -74,8 +76,23 @@ export class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState
 			<div className="body">
 				<div className="header">
 					<div className="title">Storm React Diagrams - Demo 5</div>&nbsp;
-					<button onClick={() => this.props.app.getDiagramEngine().zoomToFit()}>Zoom to fit</button>&nbsp;
-					<button onClick={this.cloneSelected}>Clone Selected</button>
+					<Button 
+						size="small"
+						variant="contained" 
+						color="primary"
+						onClick={() => this.props.app.getDiagramEngine().zoomToFit()}
+					>
+						Zoom to fit
+					</Button>
+					&nbsp;
+					<Button 
+						size="small"
+						variant="contained" 
+						color="secondary"
+						onClick={this.cloneSelected}
+					>
+						Clone Selected
+					</Button>
 				</div>
 				<div className="content">
 					<TrayWidget>

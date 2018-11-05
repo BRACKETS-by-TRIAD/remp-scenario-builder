@@ -37,7 +37,8 @@ $lightBlack       : #545454;
 
   max-width: 150px;
 
-  .node-container{
+  .node-container {
+    position: relative;
     display: flex;
     align-items: center;
 
@@ -106,18 +107,27 @@ $lightBlack       : #545454;
       }
   } 
   
-  &__right{
+  &__right {
       align-items: flex-end;
       .port {
         right: -7.5px;
       }
   }
 
-  &__bottom{
+  &__bottom {
     align-items: center;
     .port {
       bottom: -7.5px;
     }
+  }
+
+  &__icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -131,10 +141,6 @@ $lightBlack       : #545454;
 }
 
 .diamond-node {
-  .node-container {
-    position: relative;
-  }
-
   &__bottom {
     position: absolute;
     bottom: 0;
