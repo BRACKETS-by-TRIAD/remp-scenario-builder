@@ -1,5 +1,6 @@
 import * as React from "react";
 import { PortWidget, DefaultPortLabel } from "storm-react-diagrams";
+// import ActionIcon from '@material-ui/icons/StarBorder';
 import ActionIcon from '@material-ui/icons/Star';
 import { NodeModel } from "./NodeModel";
 
