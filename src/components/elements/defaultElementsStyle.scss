@@ -57,6 +57,8 @@ $lightBlack       : #545454;
 
     overflow: visible;
     background-color: white;
+
+    transition: all .15s;
   }
 
   &__title {

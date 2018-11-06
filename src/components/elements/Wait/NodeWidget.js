@@ -34,7 +34,11 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 	render() {
 		return (
 			<div className={this.getClassName()} 
-				style={{ background: this.props.node.color }}>				
+				style={{ background: this.props.node.color }}
+				onDoubleClick={() => {
+					
+				}}
+			>				
 				<div className="node-container">
 					<div className={this.bem("__icon")}>
 						<WaitIcon />

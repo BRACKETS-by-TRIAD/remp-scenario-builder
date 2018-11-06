@@ -4,6 +4,10 @@ $nodeColor: $lightViolet;
 .srd-node--selected {
   .square-node.action-node .node-container { 
     box-shadow: 0 0 10px $nodeColor;
+
+    // background: $nodeColor;
+    // color: white;
+    // border: solid 2px white;
   }
 }
 

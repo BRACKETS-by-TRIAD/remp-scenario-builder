@@ -4,6 +4,10 @@ $nodeColor: $lightRed;
 .srd-node--selected {
   .diamond-node.segment-node .node-container { 
     box-shadow: 0 0 10px $nodeColor;
+
+    // background: $nodeColor;
+    // color: white;
+    // border: solid 2px white;
   }
 }
 
