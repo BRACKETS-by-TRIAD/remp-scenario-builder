@@ -1,10 +1,12 @@
 import * as _ from "lodash";
 import { 
-	LinkModel, 
+	LinkModel as BaseLinkModel, 
 	DiagramEngine, 
 	PortModel as BasePortModel, 
-	DefaultLinkModel 
+	// DefaultLinkModel 
 } from "storm-react-diagrams";
+
+import { LinkModel } from './../Link';
 
 export class LeftRightPort extends BasePortModel {
 	in: boolean;
@@ -17,7 +19,7 @@ export class LeftRightPort extends BasePortModel {
 		this.in = this.position ===  "left";
 	}
 	
-	link(port: BasePortModel): LinkModel {
+	link(port: BasePortModel): BaseLinkModel {
 		let link = this.createLinkModel();
 
 		link.setSourcePort(this);
@@ -41,7 +43,7 @@ export class LeftRightPort extends BasePortModel {
 		this.position = data.position;
 	}
 
-	createLinkModel(): LinkModel {
-		return new DefaultLinkModel();
+	createLinkModel(): BaseLinkModel {
+		return new LinkModel();
 	}
 }

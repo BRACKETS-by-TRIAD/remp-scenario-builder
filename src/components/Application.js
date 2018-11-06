@@ -21,6 +21,7 @@ import {
 } from "./elements";
 
 import "./sass/main.scss";
+import { LinkFactory } from "./elements/Link";
 
 export class Application {
 	activeModel: DiagramModel;
@@ -117,6 +118,7 @@ export class Application {
 	}
 
 	registerModels() {
+		this.diagramEngine.registerLinkFactory(new LinkFactory());
 		this.diagramEngine.registerPortFactory(new SimplePortFactory("action", config => new Action.PortModel()));
 		this.diagramEngine.registerNodeFactory(new Action.NodeFactory());
 		
