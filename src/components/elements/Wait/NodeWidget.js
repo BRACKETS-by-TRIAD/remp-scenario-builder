@@ -1,5 +1,5 @@
 import * as React from "react";
-import { PortWidget, DefaultPortLabel } from "storm-react-diagrams";
+import { PortWidget } from "./../../widgets/PortWidget";
 // import WaitIcon from '@material-ui/icons/Timer';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
 import { NodeModel } from "./NodeModel";

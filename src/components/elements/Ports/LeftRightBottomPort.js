@@ -9,17 +9,23 @@ import {
 import { LinkModel } from './../Link';
 
 export class LeftRightBottomPort extends BasePortModel {
-	position: string | "top" | "bottom" | "left" | "right";
+	position: string  | "bottom" | "left" | "right";
 
-	constructor(pos: string = "top", type: string) {
+	constructor(pos: string = "left", type: string) {
 		super(pos, type);
+
 		this.position = pos;
+		this.in = this.position ===  "left";
 	}
 
 	serialize() {
 		return _.merge(super.serialize(), {
 			position: this.position
 		});
+	}
+
+	canLinkToPort(port: BasePortModel): boolean {
+		return this.in !== port.in;
 	}
 
 	deSerialize(data: any, engine: DiagramEngine) {

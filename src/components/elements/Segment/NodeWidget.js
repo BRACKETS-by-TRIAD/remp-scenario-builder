@@ -1,7 +1,12 @@
 import * as React from "react";
+
 import SegmentIcon from '@material-ui/icons/SubdirectoryArrowRight';
-import { PortWidget } from "storm-react-diagrams";
+import OkIcon from '@material-ui/icons/Check';
+import NopeIcon from '@material-ui/icons/Close';
+
+import { PortWidget } from "./../../widgets/PortWidget";
 import { NodeModel } from "./NodeModel";
+
 
 export interface NodeWidgetProps {
 	node: NodeModel;
@@ -43,14 +48,33 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 					<div className={this.bem("__ports")}>
 						<div className={this.bem("__left")}>
 							<PortWidget name="left" node={this.props.node} />
+								
 						</div>
 						
 						<div className={this.bem("__right")}>
-							<PortWidget name="right" node={this.props.node} />
+							<PortWidget name="right" node={this.props.node} >
+								<OkIcon 
+									style={{
+										position: 'absolute',
+										top: '-20px',
+										right: '-20px',
+										color: '#2ECC40'
+									}}
+								/>
+							</PortWidget>
 						</div>
 
 						<div className={this.bem("__bottom")}>
-							<PortWidget name="bottom" node={this.props.node} />
+							<PortWidget name="bottom" node={this.props.node} >
+								<NopeIcon 
+									style={{
+										position: 'absolute',
+										top: '8px',
+										right: '-22px',
+										color: '#FF695E'
+									}}
+								/>
+							</PortWidget>
 						</div>
 					</div>
 				</div>
