@@ -46,7 +46,7 @@ export class Application {
 					elements: [
 						{
 							id: 'abcd1',
-							title: 'Wait (1 minute)',
+							title: 'Wait',
 							type: 'wait',
 							wait: {
 								minutes: 5,

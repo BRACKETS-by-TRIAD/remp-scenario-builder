@@ -13,7 +13,7 @@ export class NodeFactory extends AbstractNodeFactory {
 	}
 
 	generateReactWidget(diagramEngine: DiagramEngine, node: NodeModel): JSX.Element {
-		return <NodeWidget node={node} classBaseName="round-node" className="wait-node" />;
+		return <NodeWidget diagramEngine={diagramEngine} node={node} classBaseName="round-node" className="wait-node" />;
 	}
 
 	getNewInstance() {

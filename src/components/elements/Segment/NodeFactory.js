@@ -14,7 +14,7 @@ export class NodeFactory extends AbstractNodeFactory {
 	}
 
 	generateReactWidget(diagramEngine: DiagramEngine, node: BaseNodeModel): JSX.Element {
-		return <NodeWidget node={node} classBaseName="diamond-node" className="segment-node" />;
+		return <NodeWidget diagramEngine={diagramEngine}  node={node} classBaseName="diamond-node" className="segment-node" />;
 	}
 
 	getNewInstance() {

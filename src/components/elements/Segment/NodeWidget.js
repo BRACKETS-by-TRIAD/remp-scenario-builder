@@ -7,6 +7,15 @@ import NopeIcon from '@material-ui/icons/Close';
 import { PortWidget } from "./../../widgets/PortWidget";
 import { NodeModel } from "./NodeModel";
 
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 export interface NodeWidgetProps {
 	node: NodeModel;
@@ -21,7 +30,10 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 
 	constructor(props: NodeWidgetProps) {
 		super(props);
-		this.state = {};
+		this.state = {
+			nodeFormName: this.props.node.name,
+			dialogOpened: false
+		};
 	}
 
 	bem(selector: string): string {
@@ -32,10 +44,26 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 		return this.props.classBaseName + " " +this.props.className;
 	}
 
+	openDialog = () => {
+		this.setState({ 
+			dialogOpened: true,
+			nodeFormName: this.props.node.name,
+		});
+	};
+	
+	closeDialog = () => {
+		this.setState({ dialogOpened: false });
+	};
+
 	render() {
 		return (
-			<div className={this.getClassName()} 
-				style={{ background: this.props.node.color }}>
+			<div 
+				className={this.getClassName()} 
+				style={{ background: this.props.node.color }}
+				onDoubleClick={() => {
+					this.openDialog();
+				}}
+			>
 				<div className={this.bem("__title")}>
 					<div className={this.bem("__name")}>{this.props.node.name}</div>
 				</div>
@@ -78,6 +106,61 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 						</div>
 					</div>
 				</div>
+
+				<Dialog
+					open={this.state.dialogOpened}
+					onClose={this.closeDialog}
+					aria-labelledby="form-dialog-title"
+				>
+					<DialogTitle id="form-dialog-title">Segment node</DialogTitle>
+
+					<DialogContent>
+						<DialogContentText>
+							TODO: popis 
+							To subscribe to this website, please enter your email address here. We will send
+							updates occasionally.
+						</DialogContentText>
+
+						<TextField
+							autoFocus
+							margin="normal"
+							id="segment-name"
+							label="Node name"
+							fullWidth
+							value={this.state.nodeFormName}
+							onChange={(event) => {
+								this.setState({
+									nodeFormName: event.target.value,
+								});
+							}}
+						/>	
+					</DialogContent>
+
+					<DialogActions>
+						<Button 
+							color="secondary"
+							onClick={() => {
+								this.closeDialog();
+							}} 
+						>
+							Cancel
+						</Button>
+
+						<Button 
+							color="primary"
+							onClick={() => {
+								// https://github.com/projectstorm/react-diagrams/issues/50 huh
+
+								this.props.node.name = this.state.nodeFormName;
+
+								this.props.diagramEngine.repaintCanvas();
+								this.closeDialog();
+							}} 
+						>
+							Save changes
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</div>
 		);
 	}

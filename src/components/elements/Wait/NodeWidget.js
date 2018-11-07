@@ -3,6 +3,18 @@ import { PortWidget } from "./../../widgets/PortWidget";
 // import WaitIcon from '@material-ui/icons/Timer';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
 import { NodeModel } from "./NodeModel";
+// import Modal from '@material-ui/core/Modal';
+import { withStyles } from '@material-ui/core/styles';
+
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 export interface NodeWidgetProps {
@@ -13,6 +25,7 @@ export interface NodeWidgetProps {
 
 export interface NodeWidgetState {}
 
+
 export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 	static defaultProps: NodeWidgetProps = {
 		node: null
@@ -20,7 +33,11 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 
 	constructor(props: NodeWidgetProps) {
 		super(props);
-		this.state = {};
+		this.state = {
+			nodeFormWaitingTime: this.props.node.wait_minutes,
+			nodeFormName: this.props.node.name,
+			dialogOpened: false
+		};
 	}
 
 	bem(selector: string): string {
@@ -31,12 +48,27 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 		return this.props.classBaseName + " " +this.props.className;
 	}
 
+	openDialog = () => {
+		this.setState({ 
+			dialogOpened: true,
+			nodeFormWaitingTime: this.props.node.wait_minutes,
+			nodeFormName: this.props.node.name,
+		});
+	};
+	
+	closeDialog = () => {
+		this.setState({ dialogOpened: false });
+	};
+
 	render() {
+		const { classes } = this.props;
+
 		return (
-			<div className={this.getClassName()} 
+			<div 
+				className={this.getClassName()} 
 				style={{ background: this.props.node.color }}
 				onDoubleClick={() => {
-					
+					this.openDialog();
 				}}
 			>				
 				<div className="node-container">
@@ -54,8 +86,84 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 					</div>
 				</div>
 				<div className={this.bem("__title")}>
-					<div className={this.bem("__name")}>{this.props.node.name}</div>
+					<div className={this.bem("__name")}>{this.props.node.name} ({this.props.node.wait_minutes} minutes)</div>
 				</div>
+				
+				<Dialog
+					open={this.state.dialogOpened}
+					onClose={this.closeDialog}
+					aria-labelledby="form-dialog-title"
+				>
+					<DialogTitle id="form-dialog-title">Wait node</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							TODO: popis 
+							To subscribe to this website, please enter your email address here. We will send
+							updates occasionally.
+						</DialogContentText>
+
+						<Grid container spacing={32}>
+							<Grid item xs={6}>
+								<TextField
+									autoFocus
+									margin="normal"
+									id="waiting-time"
+									label="Node name"
+									fullWidth
+									value={this.state.nodeFormName}
+									onChange={(event) => {
+										this.setState({
+											nodeFormName: event.target.value,
+										});
+									}}
+								/>
+							</Grid>
+
+							<Grid item xs={6}>
+								<TextField
+									autoFocus
+									margin="normal"
+									id="waiting-time"
+									label="Waiting time"
+									type="number"
+									fullWidth
+									value={this.state.nodeFormWaitingTime}
+									onChange={(event) => {
+										this.setState({
+											nodeFormWaitingTime: event.target.value,
+										});
+									}}
+								/>
+							</Grid>
+						</Grid>
+					</DialogContent>
+
+					<DialogActions>
+						<Button 
+							color="secondary"
+							onClick={() => {
+								this.closeDialog();
+							}} 
+						>
+							Cancel
+						</Button>
+
+						<Button 
+							color="primary"
+							onClick={() => {
+								// https://github.com/projectstorm/react-diagrams/issues/50 huh
+
+								this.props.node.wait_minutes = this.state.nodeFormWaitingTime;
+								this.props.node.name = this.state.nodeFormName;
+
+								this.props.diagramEngine.repaintCanvas();
+								this.closeDialog();
+							}} 
+						>
+							Save changes
+						</Button>
+					</DialogActions>
+				</Dialog>
 			</div>
 		);
 	}
