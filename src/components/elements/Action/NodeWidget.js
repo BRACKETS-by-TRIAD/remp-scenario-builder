@@ -84,6 +84,13 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 					open={this.state.dialogOpened}
 					onClose={this.closeDialog}
 					aria-labelledby="form-dialog-title"
+					onKeyUp={ (event) => {
+						if (event.keyCode === 46 || event.keyCode === 8) {
+						  event.preventDefault();
+						  event.stopPropagation();
+						  return false;
+						}
+					}}
 				>
 					<DialogTitle id="form-dialog-title">Action node</DialogTitle>
 
