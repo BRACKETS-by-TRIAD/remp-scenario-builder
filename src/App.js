@@ -25,7 +25,7 @@ class App extends Component {
     var app = new Application();
     axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN; 
 
-    return <BodyWidget app={app} />;
+    return <BodyWidget app={app} segments={this.props.segments}/>;
   }
 }
 
@@ -33,7 +33,7 @@ function mapStateToProps(state) {
   const { segments } = state;
 
   return {
-    segments
+    segments: segments.avalaibleSegments
   }
 }
 

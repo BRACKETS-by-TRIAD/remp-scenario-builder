@@ -35,6 +35,7 @@ import {
 
 export interface BodyWidgetProps {
 	app: Application;
+	segments: Array
 }
 
 export interface BodyWidgetState {}
@@ -94,6 +95,13 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		this.forceUpdate();
 	}
 
+	serialize = () => {
+		const model = this.props.app.getDiagramEngine().getDiagramModel();
+		const serializedModel = model.serializeDiagram();
+
+		
+	}
+
 	render() {
 		const { classes } = this.props;
 
@@ -129,13 +137,22 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 									direction="row"
 									justify="flex-end"
 								>
-									<Button 
+									{/* <Button 
 										size="small"
 										variant="contained" 
 										color="default"
 										onClick={() => this.props.app.getDiagramEngine().zoomToFit()}
 									>
 										Zoom to fit
+									</Button> */}
+									
+									<Button 
+										size="small"
+										variant="contained" 
+										color="default"
+										onClick={() => this.serialize()}
+									>
+										Serialize
 									</Button>
 									&nbsp;
 									<Button 
@@ -204,7 +221,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 								if (data.type === "action") {
 									node = new Action.NodeModel("Node " + (nodesCount + 1), "rgb(192,255,0)");
 								} else if(data.type === "segment") {
-									node = new Segment.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
+									node = new Segment.NodeModel({segment: this.props.segments[0]});
 								} else if(data.type === "trigger") {
 									node = new Trigger.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
 								} else if(data.type === "wait") {

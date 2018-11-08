@@ -8,6 +8,7 @@ import NopeIcon from '@material-ui/icons/Close';
 import { PortWidget } from "./../../widgets/PortWidget";
 import { NodeModel } from "./NodeModel";
 
+import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
@@ -32,8 +33,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 	constructor(props: NodeWidgetProps) {
 		super(props);
 		this.state = {
-			nodeFormName: this.props.node.name,
-			nodeSegmentId: this.props.node.segment_id,
+			nodeFormName: this.props.node.segment.name,
+			nodeSegmentId: this.props.node.segment.id,
 			dialogOpened: false
 		};
 	}
@@ -49,8 +50,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 	openDialog = () => {
 		this.setState({ 
 			dialogOpened: true,
-			nodeFormName: this.props.node.name,
-			nodeSegmentId: this.props.node.segment_id,
+			nodeFormName: this.props.node.segment.name,
+			nodeSegmentId: this.props.node.segment.id,
 		});
 	};
 	
@@ -62,13 +63,12 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 		return (
 			<div 
 				className={this.getClassName()} 
-				style={{ background: this.props.node.color }}
 				onDoubleClick={() => {
 					this.openDialog();
 				}}
 			>
 				<div className={this.bem("__title")}>
-					<div className={this.bem("__name")}>{this.props.node.name}</div>
+					<div className={this.bem("__name")}>{this.props.node.segment.name}</div>
 				</div>
 
 				<div className="node-container">
@@ -130,46 +130,49 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 							To subscribe to this website, please enter your email address here. We will send
 							updates occasionally.
 						</DialogContentText>
+						
+						{/* <Grid container spacing={32}>
+							<Grid item xs={6}>
+								<TextField
+									autoFocus
+									margin="normal"
+									id="segment-name"
+									label="Node name"
+									fullWidth
+									value={this.state.nodeFormName}
+									onChange={(event) => {
+										this.setState({
+											nodeFormName: event.target.value,
+										});
+									}}
+								/>	
+							</Grid> */}
 
-						{/* <TextField
-							autoFocus
-							margin="normal"
-							id="segment-name"
-							label="Node name"
-							fullWidth
-							value={this.state.nodeFormName}
-							onChange={(event) => {
-								this.setState({
-									nodeFormName: event.target.value,
-								});
-							}}
-						/>	 */}
-
-						<TextField
-							id="select-segment"
-							select
-							label="Select segment"
-							// className={classes.textField}
-							value={this.state.nodeSegmentId}
-							onChange={(event) => {
-								this.setState({
-									nodeSegmentId: event.target.value,
-								});
-							}}
-							// SelectProps={{
-							// 	MenuProps: {
-							// 		className: classes.menu,
-							// 	},
-							// }}
-							helperText="Please select your segment"
-							margin="normal"
-						>
-							{this.props.segments && this.props.segments.map(option => (
-								<MenuItem key={option.id} value={option.id}>
-									{option.name}
-								</MenuItem>
-							))}
-						</TextField>
+							{/* <Grid item xs={6}> */}
+								<TextField
+									id="select-segment"
+									select
+									label="Select segment"
+									value={this.state.nodeSegmentId}
+									onChange={(event) => {
+										this.setState({
+											nodeSegmentId: event.target.value,
+											nodeFormName: this.props.segments.find(function(segment) {
+												return segment.id === event.target.value;
+											}).name
+										});
+									}}
+									helperText="Please select your segment"
+									margin="normal"
+								>
+									{this.props.segments && this.props.segments.map(option => (
+										<MenuItem key={`segment-id-${option.id}`} value={option.id}>
+											{option.name}
+										</MenuItem>
+									))}
+								</TextField>
+							{/* </Grid>
+						</Grid> */}
 					</DialogContent>
 
 					<DialogActions>
@@ -187,8 +190,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 							onClick={() => {
 								// https://github.com/projectstorm/react-diagrams/issues/50 huh
 
-								this.props.node.name = this.state.nodeFormName;
-								this.props.node.segment_id = this.state.nodeSegmentId;
+								this.props.node.segment.name = this.state.nodeFormName;
+								this.props.node.segment.id = this.state.nodeSegmentId;
 
 								this.props.diagramEngine.repaintCanvas();
 								this.closeDialog();

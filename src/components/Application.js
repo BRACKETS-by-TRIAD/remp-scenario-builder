@@ -34,11 +34,15 @@ export class Application {
 
 		// this.activeModel.setGridSize(50);
 
+		//deserialize
+		// this.activeModel.deSerializeDiagram(JSON.parse(str), engine);
+		// this.diagramEngine.setDiagramModel(this.activeModel);
+
 		this.payload = {
 			triggers: [
 				{	
 					id: 'abcd',
-					title: 'On event registration',
+					name: 'On event registration',
 					type: 'event',
 					event: {
 						name: 'registration'
@@ -46,7 +50,7 @@ export class Application {
 					elements: [
 						{
 							id: 'abcd1',
-							title: 'Wait',
+							name: 'Wait',
 							type: 'wait',
 							wait: {
 								minutes: 5,
@@ -58,9 +62,10 @@ export class Application {
 						},
 						{
 							id: 'abcd2',
-							title: 'Segment 1',
 							type: 'segment',
 							segment: {
+								id: 1,
+								name: 'Default group',
 								code: 'segment1',
 								descendants_positive: [
 									'abcd21', //FIXME: uuids or element objects? 
@@ -74,7 +79,7 @@ export class Application {
 						},
 						{
 							id: 'abcd3',
-							title: 'Send registration email',
+							name: 'Send registration email',
 							type: 'action',
 							action: {
 								type: 'email',
@@ -137,7 +142,7 @@ export class Application {
 			const nodes = [];
 			const triggerVisual = this.payload.visual[trigger.id];
 
-			const triggerNode = new Trigger.NodeModel(trigger); //trigger.title, trigger.event.name
+			const triggerNode = new Trigger.NodeModel(trigger); //trigger.name, trigger.event.name
 			triggerNode.setPosition(triggerVisual.x, triggerVisual.y);
 
 

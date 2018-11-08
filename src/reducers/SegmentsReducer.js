@@ -4,7 +4,7 @@ import {
 } from './../actions/types';
   
 const INITIAL_STATE = {
-    avalaibleSegments: ['neheh']
+    avalaibleSegments: []
 };
 
 export default (state = INITIAL_STATE, action) => {
