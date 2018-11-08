@@ -6,6 +6,8 @@ export class NodeModel extends BaseNodeModel {
 		super("segment");
 
 		this.name = element.title || 'Segment';
+		this.segment_id = 1;
+		
 		// this.addPort(new PortModel("top"));
 		this.addPort(new PortModel("left"));
 		this.addPort(new PortModel("bottom"));

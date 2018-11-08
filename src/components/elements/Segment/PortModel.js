@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { LeftRightBottomPort} from './../Ports';
 
 export class PortModel extends LeftRightBottomPort {

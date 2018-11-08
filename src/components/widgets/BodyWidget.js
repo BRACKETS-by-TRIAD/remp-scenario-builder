@@ -3,7 +3,7 @@ import * as _ from "lodash";
 
 import { 
 	DiagramWidget,
-	DiagramProps,
+	// DiagramProps,
 	LinkModel,
 	NodeModel
 } from "storm-react-diagrams";

@@ -3,11 +3,8 @@ import { PortWidget } from "./../../widgets/PortWidget";
 // import WaitIcon from '@material-ui/icons/Timer';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
 import { NodeModel } from "./NodeModel";
-// import Modal from '@material-ui/core/Modal';
-import { withStyles } from '@material-ui/core/styles';
 
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -61,8 +58,7 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 	};
 
 	render() {
-		const { classes } = this.props;
-
+		
 		return (
 			<div 
 				className={this.getClassName()} 

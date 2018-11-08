@@ -2,8 +2,6 @@ import {
 	DefaultLinkModel
 } from "storm-react-diagrams";
 
-import * as React from "react";
-
 export class LinkModel extends DefaultLinkModel {
 	constructor() {
 		super("custom");

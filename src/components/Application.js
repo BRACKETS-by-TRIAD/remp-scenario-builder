@@ -1,7 +1,7 @@
 import {
 	DiagramEngine,
 	DiagramModel,
-	DefaultNodeModel,
+	// DefaultNodeModel,
 	LinkModel,
 	NodeModel
 	// LinkModel,

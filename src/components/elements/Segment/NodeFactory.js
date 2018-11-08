@@ -4,7 +4,7 @@ import {
 	NodeModel as BaseNodeModel
 } from "storm-react-diagrams";
 
-import { NodeWidget } from "./NodeWidget";
+import NodeWidget from "./NodeWidget";
 import { NodeModel } from "./NodeModel";
 import * as React from "react";
 

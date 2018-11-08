@@ -1,4 +1,5 @@
 import * as React from "react";
+import { connect } from 'react-redux';
 
 import SegmentIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import OkIcon from '@material-ui/icons/Check';
@@ -7,8 +8,8 @@ import NopeIcon from '@material-ui/icons/Close';
 import { PortWidget } from "./../../widgets/PortWidget";
 import { NodeModel } from "./NodeModel";
 
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -23,7 +24,7 @@ export interface NodeWidgetProps {
 
 export interface NodeWidgetState {}
 
-export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
+class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 	static defaultProps: NodeWidgetProps = {
 		node: null
 	};
@@ -32,6 +33,7 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 		super(props);
 		this.state = {
 			nodeFormName: this.props.node.name,
+			nodeSegmentId: this.props.node.segment_id,
 			dialogOpened: false
 		};
 	}
@@ -48,6 +50,7 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 		this.setState({ 
 			dialogOpened: true,
 			nodeFormName: this.props.node.name,
+			nodeSegmentId: this.props.node.segment_id,
 		});
 	};
 	
@@ -128,7 +131,7 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 							updates occasionally.
 						</DialogContentText>
 
-						<TextField
+						{/* <TextField
 							autoFocus
 							margin="normal"
 							id="segment-name"
@@ -140,7 +143,33 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 									nodeFormName: event.target.value,
 								});
 							}}
-						/>	
+						/>	 */}
+
+						<TextField
+							id="select-segment"
+							select
+							label="Select segment"
+							// className={classes.textField}
+							value={this.state.nodeSegmentId}
+							onChange={(event) => {
+								this.setState({
+									nodeSegmentId: event.target.value,
+								});
+							}}
+							// SelectProps={{
+							// 	MenuProps: {
+							// 		className: classes.menu,
+							// 	},
+							// }}
+							helperText="Please select your segment"
+							margin="normal"
+						>
+							{this.props.segments && this.props.segments.map(option => (
+								<MenuItem key={option.id} value={option.id}>
+									{option.name}
+								</MenuItem>
+							))}
+						</TextField>
 					</DialogContent>
 
 					<DialogActions>
@@ -159,6 +188,7 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 								// https://github.com/projectstorm/react-diagrams/issues/50 huh
 
 								this.props.node.name = this.state.nodeFormName;
+								this.props.node.segment_id = this.state.nodeSegmentId;
 
 								this.props.diagramEngine.repaintCanvas();
 								this.closeDialog();
@@ -172,3 +202,13 @@ export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState
 		);
 	}
 }
+
+function mapStateToProps(state) {
+	const { segments } = state;
+  
+	return {
+		segments: segments.avalaibleSegments
+	}
+  }
+  
+export default connect(mapStateToProps)(NodeWidget);
