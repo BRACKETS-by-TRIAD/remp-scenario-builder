@@ -95,11 +95,24 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		this.forceUpdate();
 	}
 
-	serialize = () => {
+	saveChanges = () => {
 		const model = this.props.app.getDiagramEngine().getDiagramModel();
-		const serializedModel = model.serializeDiagram();
+		const serializedModel = model.serializeDiagram();	
 
-		
+
+	}
+
+	discardChanges = () => {
+		const model = this.props.app.getDiagramEngine().getDiagramModel();
+		const payload = JSON.parse(localStorage.getItem('payload'));
+
+		Object.entries(model.nodes).map((node) => {
+			console.log(node[1]);
+			node[1].remove();
+		});
+
+		this.props.app.renderPayload(payload);
+		this.props.app.getDiagramEngine().repaintCanvas();
 	}
 
 	render() {
@@ -150,9 +163,18 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 										size="small"
 										variant="contained" 
 										color="default"
-										onClick={() => this.serialize()}
+										onClick={() => this.saveChanges()}
 									>
-										Serialize
+										Save
+									</Button>
+									&nbsp;
+									<Button 
+										size="small"
+										variant="contained" 
+										color="default"
+										onClick={() => this.discardChanges()}
+									>
+										Discard changes
 									</Button>
 									&nbsp;
 									<Button 

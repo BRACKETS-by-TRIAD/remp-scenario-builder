@@ -116,8 +116,14 @@ export class Application {
 			}
 		};
 
+		if(localStorage.getItem('payload')) {
+			localStorage.setItem('payload', JSON.stringify(this.payload));
+		}
+
+		this.payload = JSON.parse(localStorage.getItem('payload'));
+
 		this.registerModels();
-		this.renderPayload();
+		this.renderPayload(this.payload);
 
 		this.diagramEngine.setDiagramModel(this.activeModel);
 	}
@@ -137,10 +143,10 @@ export class Application {
 		this.diagramEngine.registerNodeFactory(new Wait.NodeFactory());
 	}
 
-	renderPayload() {
-		const nodes = _.flatMap(this.payload.triggers, ((trigger) => {
+	renderPayload(payload) {
+		const nodes = _.flatMap(payload.triggers, ((trigger) => {
 			const nodes = [];
-			const triggerVisual = this.payload.visual[trigger.id];
+			const triggerVisual = payload.visual[trigger.id];
 
 			const triggerNode = new Trigger.NodeModel(trigger); //trigger.name, trigger.event.name
 			triggerNode.setPosition(triggerVisual.x, triggerVisual.y);
@@ -148,7 +154,7 @@ export class Application {
 
 			const elementNodes = trigger.elements.map((element) => {
 				let node = null;
-				const visual = this.payload.visual[element.id];
+				const visual = payload.visual[element.id];
 
 				if(element.type === 'action') {
 					node = new Action.NodeModel(element);
@@ -183,12 +189,6 @@ export class Application {
 				this.activeModel.addNode(model);
 			}
 		});
-
-		// nodes.forEach(item => {
-		// 	item.addListener({
-		// 		selectionChanged: console.log('selectionChanged')
-		// 	});
-		// });
 	}
 
 	getActiveDiagram(): DiagramModel {
