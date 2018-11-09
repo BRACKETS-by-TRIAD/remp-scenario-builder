@@ -39,80 +39,120 @@ export class Application {
 		// this.diagramEngine.setDiagramModel(this.activeModel);
 
 		this.payload = {
-			triggers: [
-				{	
-					id: 'abcd',
-					name: 'On event registration',
-					type: 'event',
-					event: {
-						name: 'registration'
-					},
-					elements: [
-						{
-							id: 'abcd1',
-							name: 'Wait',
-							type: 'wait',
-							wait: {
-								minutes: 5,
-								descendants: [
-									'abcd12', //FIXME: uuids or element objects? 
-									'abcd12'
-								]
-							}
-						},
-						{
-							id: 'abcd2',
-							type: 'segment',
-							segment: {
-								id: 1,
-								name: 'Default group',
-								code: 'segment1',
-								descendants_positive: [
-									'abcd21', //FIXME: uuids or element objects? 
-									'abcd22'
-								],
-								descendants_negative: [
-									'abcd23', //FIXME: uuids or element objects? 
-									'abcd24'
-								]
-							}
-						},
-						{
-							id: 'abcd3',
-							name: 'Send registration email',
-							type: 'action',
-							action: {
-								type: 'email',
-								email: {
-									code: 'mail_template_123'
-								},
-								descendants:  [
-									'abcd31', //FIXME: uuids or element objects? 
-									'abcd32'
-								]
-							}
-						}
-					],
-				}
+			"triggers": [
+			  {
+				"id": "0ff4d8a1-9432-4394-8e6d-ec41b73023bd",
+				"title": "Event",
+				"type": "event",
+				"event": {
+				  "name": "registration"
+				},
+				"elements": [
+				  "2ebc3599-974a-43bc-8fc6-c2e02176a77a"
+				]
+			  }
 			],
-			// FIXME: other elements?
-			visual: {
-				'abcd': {
-					x: 100,
-					y: 150
+			"elements": {
+			  "cecee803-d8c1-4460-8835-7cdc749fc1bb": {
+				"id": "cecee803-d8c1-4460-8835-7cdc749fc1bb",
+				"title": "Send email",
+				"type": "action",
+				"action": {
+				  "type": "email",
+				  "email": {
+					"code": "mail_template_123"
+				  },
+				  "descendants": []
+				}
+			  },
+			  "266876c2-6f8d-4391-97d2-9a539825083e": {
+				"id": "266876c2-6f8d-4391-97d2-9a539825083e",
+				"title": "Send email",
+				"type": "action",
+				"action": {
+				  "type": "email",
+				  "email": {
+					"code": "mail_template_123"
+				  },
+				  "descendants": []
+				}
+			  },
+			  "82deb3f0-f412-4e8d-83ff-f756356f1b95": {
+				"id": "82deb3f0-f412-4e8d-83ff-f756356f1b95",
+				"type": "segment",
+				"segment": {
+				  "id": 6,
+				  "name": "Koniec fica",
+				  "code": "segment1",
+				  "descendants_positive": [
+					"266876c2-6f8d-4391-97d2-9a539825083e"
+				  ],
+				  "descendants_negative": []
+				}
+			  },
+			  "844d7857-662a-44d7-bd74-cfaa242330b8": {
+				"id": "844d7857-662a-44d7-bd74-cfaa242330b8",
+				"title": "Wait",
+				"type": "wait",
+				"wait": {
+				  "minutes": "10",
+				  "descendants": [
+					"82deb3f0-f412-4e8d-83ff-f756356f1b95"
+				  ]
+				}
+			  },
+			  "2ebc3599-974a-43bc-8fc6-c2e02176a77a": {
+				"id": "2ebc3599-974a-43bc-8fc6-c2e02176a77a",
+				"type": "segment",
+				"segment": {
+				  "id": 6,
+				  "name": "Koniec fica",
+				  "code": "segment1",
+				  "descendants_positive": [
+					"cecee803-d8c1-4460-8835-7cdc749fc1bb"
+				  ],
+				  "descendants_negative": [
+					"844d7857-662a-44d7-bd74-cfaa242330b8"
+				  ]
+				}
+			  },
+			  "0ff4d8a1-9432-4394-8e6d-ec41b73023bd": {
+				"id": "0ff4d8a1-9432-4394-8e6d-ec41b73023bd",
+				"title": "Event",
+				"type": "event",
+				"event": {
+				  "name": "registration"
 				},
-				'abcd1': {
-					x: 400,
-					y: 150
-				},
-				'abcd2': {
-					x: 400,
-					y: 300
-				},
-				'abcd3': {
-					x: 400,
-					y: 25
-				},
+				"elements": [
+				  "2ebc3599-974a-43bc-8fc6-c2e02176a77a"
+				]
+			  }
+			},
+			"visual": {
+			  "cecee803-d8c1-4460-8835-7cdc749fc1bb": {
+				"x": 595,
+				"y": 152
+			  },
+			  "266876c2-6f8d-4391-97d2-9a539825083e": {
+				"x": 779,
+				"y": 326
+			  },
+			  "82deb3f0-f412-4e8d-83ff-f756356f1b95": {
+				"x": 615,
+				"y": 299
+			  },
+			  "844d7857-662a-44d7-bd74-cfaa242330b8": {
+				"x": 423,
+				"y": 326
+			  },
+			  "2ebc3599-974a-43bc-8fc6-c2e02176a77a": {
+				"x": 311,
+				"y": 123
+			  },
+			  "0ff4d8a1-9432-4394-8e6d-ec41b73023bd": {
+				"x": 100,
+				"y": 150
+			  }
 			}
 		};
 

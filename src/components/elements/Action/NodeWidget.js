@@ -1,7 +1,7 @@
 import * as React from "react";
 import { PortWidget } from "./../../widgets/PortWidget";
 // import ActionIcon from '@material-ui/icons/StarBorder';
-import ActionIcon from '@material-ui/icons/Star';
+import ActionIcon from '@material-ui/icons/Mail';
 import { NodeModel } from "./NodeModel";
 
 import TextField from '@material-ui/core/TextField';

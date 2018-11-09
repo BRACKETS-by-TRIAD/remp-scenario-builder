@@ -14,11 +14,12 @@ import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 
-import ActionIcon from '@material-ui/icons/Star';
+import ActionIcon from '@material-ui/icons/Mail';
 import TriggerIcon from '@material-ui/icons/Notifications';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
 import SegmentIcon from '@material-ui/icons/SubdirectoryArrowRight';
@@ -146,7 +147,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		if (node.type === "action") {
 			return 					{
 				id: node.id,
-				name: node.name,
+				title: node.name,
 				type: 'action',
 				action: {
 					type: 'email',
@@ -171,7 +172,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		} else if(node.type === "trigger") {
 			return {
 				id: node.id,
-				name: node.name,
+				title: node.name,
 				type: 'event',
 				event: {
 					name: 'registration'
@@ -181,9 +182,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		} else if(node.type === "wait") {
 			return {
 				id: node.id,
-				name: node.name,
+				title: node.name,
 				type: 'wait',
-				wait: {
+				wait: { 
 					minutes: node.wait_minutes,
 					descendants: this.getAllChildrenNodes(node, model).map((node) => node.id)
 				}
@@ -256,7 +257,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 									>
 										Save
 									</Button>
-									&nbsp;
+									{/* &nbsp;
 									<Button 
 										size="small"
 										variant="contained" 
@@ -264,7 +265,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 										onClick={() => this.discardChanges()}
 									>
 										Discard changes
-									</Button>
+									</Button> */}
 									{/* &nbsp;
 									<Button 
 										size="small"
@@ -287,13 +288,38 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 					}}
 				>
 					<div className={classes.toolbar} />
-						<List>
+						<List
+							component="nav"
+							subheader= {
+								<ListSubheader component="div">Triggers</ListSubheader>
+								}
+						>
 							<TrayItemWidget 
 								model={{ type: "trigger" }} 
-								name="Trigger" 
+								name="Event" 
 								icon={<TriggerIcon />}
 							/>
+						</List>
 
+						<List
+							component="nav"
+							subheader= {
+								<ListSubheader component="div">Actions</ListSubheader>
+							}
+						>
+							<TrayItemWidget 
+								model={{ type: "action" }} 
+								name="Send email" 
+								icon={<ActionIcon />} 
+							/>
+						</List>
+
+						<List
+							component="nav"
+							subheader= {
+								<ListSubheader component="div">Operations</ListSubheader>
+							}
+						>
 							<TrayItemWidget 
 								model={{ type: "segment" }} 
 								name="Segment" 
@@ -304,12 +330,6 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 								model={{ type: "wait" }} 
 								name="Wait" 
 								icon={<WaitIcon />}
-							/>
-
-							<TrayItemWidget 
-								model={{ type: "action" }} 
-								name="Action" 
-								icon={<ActionIcon />} 
 							/>
 						</List>
 					</Drawer>
@@ -330,13 +350,21 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 								
 								var node = null;
 								if (data.type === "action") {
-									node = new Action.NodeModel();
+									node = new Action.NodeModel({
+
+									});
 								} else if(data.type === "segment") {
-									node = new Segment.NodeModel({segment: this.props.segments[0]});
+									node = new Segment.NodeModel({
+										segment: this.props.segments[0]
+									});
 								} else if(data.type === "trigger") {
-									node = new Trigger.NodeModel();
+									node = new Trigger.NodeModel({
+
+									});
 								} else if(data.type === "wait") {
-									node = new Wait.NodeModel();
+									node = new Wait.NodeModel({
+
+									});
 								}
 								var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
 								node.x = points.x;
