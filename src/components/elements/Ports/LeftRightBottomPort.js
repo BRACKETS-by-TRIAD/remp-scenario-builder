@@ -18,6 +18,15 @@ export class LeftRightBottomPort extends BasePortModel {
 		this.in = this.position ===  "left";
 	}
 
+	link(port: BasePortModel): BaseLinkModel {
+		let link = this.createLinkModel();
+
+		link.setSourcePort(this);
+		link.setTargetPort(port);
+
+		return link;
+	}
+
 	serialize() {
 		return _.merge(super.serialize(), {
 			position: this.position

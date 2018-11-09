@@ -121,6 +121,7 @@ export class Application {
 		}
 
 		this.payload = JSON.parse(localStorage.getItem('payload'));
+		console.log(this.payload);
 
 		this.registerModels();
 		this.renderPayload(this.payload);
@@ -145,50 +146,102 @@ export class Application {
 
 	renderPayload(payload) {
 		const nodes = _.flatMap(payload.triggers, ((trigger) => {
-			const nodes = [];
 			const triggerVisual = payload.visual[trigger.id];
+			trigger.type = "trigger";
 
-			const triggerNode = new Trigger.NodeModel(trigger); //trigger.name, trigger.event.name
-			triggerNode.setPosition(triggerVisual.x, triggerVisual.y);
-
-
-			const elementNodes = trigger.elements.map((element) => {
-				let node = null;
-				const visual = payload.visual[element.id];
-
-				if(element.type === 'action') {
-					node = new Action.NodeModel(element);
-				} else if(element.type === 'segment') {
-					node = new Segment.NodeModel(element);
-				} else if(element.type === 'wait') {
-					node = new Wait.NodeModel(element);
-				}
-
-				node.setPosition(visual.x, visual.y);
-
-				return node;
-			});
-
-			const links = elementNodes.map(function(element) {
-				return triggerNode.getPort("right").link(element.getPort("left"));
-			})
-
-
-			return [ triggerNode, ...elementNodes, ...links ];
+			return this.renderElements(trigger, triggerVisual);
 		}));
 
-		//FIXME?
-		// console.log(nodes);
-		// const models = this.activeModel.addAll(nodes);
 
+		// nodes.forEach(model => {
+		// 	if (model instanceof LinkModel) {
+		// 		this.activeModel.addLink(model);
+		// 	} else if (model instanceof NodeModel) {
+		// 		this.activeModel.addNode(model);
+		// 	}
+		// });
+	}
 
-		nodes.forEach(model => {
-			if (model instanceof LinkModel) {
-				this.activeModel.addLink(model);
-			} else if (model instanceof NodeModel) {
-				this.activeModel.addNode(model);
-			}
-		});
+	renderElements(element, visual) {
+		let nodes = [];
+		let node = null;
+
+		if(element.type === 'trigger') {
+			node = new Trigger.NodeModel(element);
+			
+			nodes = element.elements.flatMap((elementId) => {
+				const element = this.payload.elements[elementId];
+				const visual  = this.payload.visual[element.id];
+
+				const nextNodes = this.renderElements(element, visual);
+				const link = node.getPort("right").link(nextNodes[0].getPort("left")); //FIXME/REFACTOR: nextNodes[0] is the last added node, it works, but it's messy
+
+				this.activeModel.addLink(link);
+
+				return nextNodes;
+			});
+		} else if(element.type === 'action') {
+			node = new Action.NodeModel(element);
+			
+			nodes = element.action.descendants.flatMap((elementId) => {
+				const element = this.payload.elements[elementId];
+				const visual  = this.payload.visual[element.id];
+
+				const nextNodes = this.renderElements(element, visual);
+				const link = node.getPort("right").link(nextNodes[0].getPort("left"));
+
+				this.activeModel.addLink(link);
+
+				return nextNodes;
+			});
+
+		} else if(element.type === 'segment') {
+			node = new Segment.NodeModel(element);
+
+			const nodes_positive = element.segment.descendants_positive.flatMap((elementId) => {
+				const element = this.payload.elements[elementId];
+				const visual  = this.payload.visual[element.id];
+
+				const nextNodes = this.renderElements(element, visual);
+				const link = node.getPort("right").link(nextNodes[0].getPort("left"));
+				this.activeModel.addLink(link);
+				
+				return nextNodes;
+			});
+
+			const nodes_negative = element.segment.descendants_negative.flatMap((elementId) => {
+				const element = this.payload.elements[elementId];
+				const visual  = this.payload.visual[element.id];
+
+				const nextNodes = this.renderElements(element, visual);
+				const link = node.getPort("bottom").link(nextNodes[0].getPort("left"));
+				
+				this.activeModel.addLink(link);
+
+				return nextNodes;
+			});
+
+			nodes = [...nodes_positive, ...nodes_negative];
+
+		} else if(element.type === 'wait') {
+			node = new Wait.NodeModel(element);
+
+			nodes = element.wait.descendants.flatMap((elementId) => {
+				const element = this.payload.elements[elementId];
+				const visual  = this.payload.visual[element.id];
+
+				const nextNodes = this.renderElements(element, visual);
+				const link = node.getPort("right").link(nextNodes[0].getPort("left"));
+				this.activeModel.addLink(link);
+
+				return nextNodes;
+			});
+		}
+
+		this.activeModel.addNode(node);
+		node.setPosition(visual.x, visual.y);
+
+		return [node, ...nodes];
 	}
 
 	getActiveDiagram(): DiagramModel {

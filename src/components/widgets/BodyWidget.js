@@ -99,12 +99,16 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		const payload  = {};
 		const model = this.props.app.getDiagramEngine().getDiagramModel();
 		const serializedModel = model.serializeDiagram();	
+
+		console.log(model);
+		console.log(serializedModel);
 		
 		payload.triggers = serializedModel.nodes.filter((node) => node.type == 'trigger')
 											    .map((node) => this.formatNode(node, model));
-											
-		payload.visual = {};
 		
+		payload.elements = {};
+		payload.visual = {};
+
 		Object.entries(model.getNodes()).map((node) => {
 			payload.visual[node[0]] = {
 				x: node[1].x,
@@ -112,22 +116,29 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 			}
 		});
 
+		Object.entries(model.getNodes()).map((node) => {
+			payload.elements[node[0]] = this.formatNode(node[1].serialize(), model);
+		});
+
+		console.log(payload);
+		
 		localStorage.setItem('payload', JSON.stringify(payload));
 	}
 
-	getAllChildrenNodes(node, model) {
-		return node.ports.flatMap((port) => {
-			return port.links.map((link) => {
-				let nextNode = null;
+	getAllChildrenNodes(node, model, portDirection = "right") {
+		const port = node.ports.find((port) => port.name == portDirection);
 
-				if(model.links[link].targetPort.parent.id !== node.id) {
-					nextNode = model.links[link].targetPort.parent;
-				} else {
-					nextNode = model.links[link].sourcePort.parent;
-				}
+		return port.links.map((link) => {
+			let nextNode = null;
 
-				return this.formatNode(nextNode.serialize(), model);
-			});
+			if(model.links[link].targetPort.parent.id !== node.id) {
+				nextNode = model.links[link].targetPort.parent;
+			} else {
+				nextNode = model.links[link].sourcePort.parent;
+			}
+
+			// return this.formatNode(nextNode.serialize(), model);
+			return nextNode.serialize();
 		});
 	}
 
@@ -142,9 +153,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 					email: {
 						code: 'mail_template_123'
 					},
-					descendants:  [
-
-					]
+					descendants: this.getAllChildrenNodes(node, model).map((node) => node.id)
 				}
 			}
 		} else if(node.type === "segment") {
@@ -155,12 +164,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 					id: node.segment.id,
 					name: node.segment.name,
 					code: 'segment1',
-					descendants_positive: [
-
-					],
-					descendants_negative: [
-	
-					]
+					descendants_positive: this.getAllChildrenNodes(node, model, "right").map((node) => node.id),
+					descendants_negative: this.getAllChildrenNodes(node, model, "bottom").map((node) => node.id)
 				}
 			}
 		} else if(node.type === "trigger") {
@@ -171,7 +176,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 				event: {
 					name: 'registration'
 				},
-				elements: this.getAllChildrenNodes(node, model)
+				elements: this.getAllChildrenNodes(node, model).map((node) => node.id) //FIXME: ask peter if it's ok
 			}
 		} else if(node.type === "wait") {
 			return {
@@ -180,7 +185,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 				type: 'wait',
 				wait: {
 					minutes: node.wait_minutes,
-					descendants: []
+					descendants: this.getAllChildrenNodes(node, model).map((node) => node.id)
 				}
 			}
 		}
