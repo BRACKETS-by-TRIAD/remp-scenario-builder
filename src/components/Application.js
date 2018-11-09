@@ -116,7 +116,7 @@ export class Application {
 			}
 		};
 
-		if(localStorage.getItem('payload')) {
+		if(!localStorage.getItem('payload')) {
 			localStorage.setItem('payload', JSON.stringify(this.payload));
 		}
 

@@ -96,10 +96,94 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 	}
 
 	saveChanges = () => {
+		const payload  = {};
 		const model = this.props.app.getDiagramEngine().getDiagramModel();
 		const serializedModel = model.serializeDiagram();	
+		
+		payload.triggers = serializedModel.nodes.filter((node) => node.type == 'trigger')
+											    .map((node) => this.formatNode(node, model));
+											
+		payload.visual = {};
+		
+		Object.entries(model.getNodes()).map((node) => {
+			payload.visual[node[0]] = {
+				x: node[1].x,
+				y: node[1].y
+			}
+		});
 
+		localStorage.setItem('payload', JSON.stringify(payload));
+	}
 
+	getAllChildrenNodes(node, model) {
+		return node.ports.flatMap((port) => {
+			return port.links.map((link) => {
+				let nextNode = null;
+
+				if(model.links[link].targetPort.parent.id !== node.id) {
+					nextNode = model.links[link].targetPort.parent;
+				} else {
+					nextNode = model.links[link].sourcePort.parent;
+				}
+
+				return this.formatNode(nextNode.serialize(), model);
+			});
+		});
+	}
+
+	formatNode(node, model) {
+		if (node.type === "action") {
+			return 					{
+				id: node.id,
+				name: node.name,
+				type: 'action',
+				action: {
+					type: 'email',
+					email: {
+						code: 'mail_template_123'
+					},
+					descendants:  [
+
+					]
+				}
+			}
+		} else if(node.type === "segment") {
+			return {
+				id: node.id,
+				type: 'segment',
+				segment: {
+					id: node.segment.id,
+					name: node.segment.name,
+					code: 'segment1',
+					descendants_positive: [
+
+					],
+					descendants_negative: [
+	
+					]
+				}
+			}
+		} else if(node.type === "trigger") {
+			return {
+				id: node.id,
+				name: node.name,
+				type: 'event',
+				event: {
+					name: 'registration'
+				},
+				elements: this.getAllChildrenNodes(node, model)
+			}
+		} else if(node.type === "wait") {
+			return {
+				id: node.id,
+				name: node.name,
+				type: 'wait',
+				wait: {
+					minutes: node.wait_minutes,
+					descendants: []
+				}
+			}
+		}
 	}
 
 	discardChanges = () => {
@@ -162,7 +246,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 									<Button 
 										size="small"
 										variant="contained" 
-										color="default"
+										color="secondary"
 										onClick={() => this.saveChanges()}
 									>
 										Save
@@ -176,7 +260,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 									>
 										Discard changes
 									</Button>
-									&nbsp;
+									{/* &nbsp;
 									<Button 
 										size="small"
 										variant="contained" 
@@ -184,7 +268,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 										onClick={this.cloneSelected}
 									>
 										Clone Selected
-									</Button>
+									</Button> */}
 								</Grid>
 							</Grid>
 						</Grid>
@@ -241,13 +325,13 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 								
 								var node = null;
 								if (data.type === "action") {
-									node = new Action.NodeModel("Node " + (nodesCount + 1), "rgb(192,255,0)");
+									node = new Action.NodeModel();
 								} else if(data.type === "segment") {
 									node = new Segment.NodeModel({segment: this.props.segments[0]});
 								} else if(data.type === "trigger") {
-									node = new Trigger.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
+									node = new Trigger.NodeModel();
 								} else if(data.type === "wait") {
-									node = new Wait.NodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
+									node = new Wait.NodeModel();
 								}
 								var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
 								node.x = points.x;
