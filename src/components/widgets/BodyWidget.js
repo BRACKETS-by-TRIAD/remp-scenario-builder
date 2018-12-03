@@ -101,8 +101,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		const model = this.props.app.getDiagramEngine().getDiagramModel();
 		const serializedModel = model.serializeDiagram();	
 
-		console.log(model);
-		console.log(serializedModel);
+		// console.log(model);
+		// console.log(serializedModel);
 		
 		payload.triggers = serializedModel.nodes.filter((node) => node.type == 'trigger')
 											    .map((node) => this.formatNode(node, model));
@@ -118,7 +118,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		});
 
 		Object.entries(model.getNodes()).map((node) => {
-			payload.elements[node[0]] = this.formatNode(node[1].serialize(), model);
+			if(node[1].type !== 'trigger') {
+				payload.elements[node[0]] = this.formatNode(node[1].serialize(), model);
+			}
 		});
 
 		console.log(payload);
@@ -126,8 +128,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		localStorage.setItem('payload', JSON.stringify(payload));
 	}
 
-	getAllChildrenNodes(node, model, portDirection = "right") {
-		const port = node.ports.find((port) => port.name == portDirection);
+	getAllChildrenNodes(node, model, portName = "right") {
+		const port = node.ports.find((port) => port.name == portName);
 
 		return port.links.map((link) => {
 			let nextNode = null;
@@ -139,14 +141,14 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 			}
 
 			// return this.formatNode(nextNode.serialize(), model);
-			return nextNode.serialize();
+			return { ...nextNode.serialize(), portName };
 		});
 	}
 
 	formatNode(node, model) {
 		if (node.type === "action") {
 			return 					{
-				id: node.id,
+				uuid: node.id,
 				title: node.name,
 				type: 'action',
 				action: {
@@ -154,54 +156,67 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 					email: {
 						code: 'mail_template_123'
 					},
-					descendants: this.getAllChildrenNodes(node, model).map((node) => node.id)
+					descendants: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
 				}
 			}
 		} else if(node.type === "segment") {
+			const descendantsPositive = this.getAllChildrenNodes(node, model, "right").map((descendantNode) => this.formatDescendant(descendantNode, node));
+			const descendantsNegative = this.getAllChildrenNodes(node, model, "bottom").map((descendantNode) => this.formatDescendant(descendantNode, node))
+
 			return {
-				id: node.id,
-				type: 'segment',
+				uuid: node.id,
+				name: 'nieco',
 				segment: {
-					id: node.segment.id,
-					name: node.segment.name,
 					code: 'segment1',
-					descendants_positive: this.getAllChildrenNodes(node, model, "right").map((node) => node.id),
-					descendants_negative: this.getAllChildrenNodes(node, model, "bottom").map((node) => node.id)
-				}
+					descendants: [...descendantsPositive, ...descendantsNegative]
+				},
+				type: 'segment',
 			}
 		} else if(node.type === "trigger") {
 			return {
-				id: node.id,
+				uuid: node.id,
 				title: node.name,
 				type: 'event',
 				event: {
 					name: 'registration'
 				},
-				elements: this.getAllChildrenNodes(node, model).map((node) => node.id) //FIXME: ask peter if it's ok
+				elements: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
 			}
 		} else if(node.type === "wait") {
 			return {
-				id: node.id,
+				uuid: node.id,
 				title: node.name,
 				type: 'wait',
 				wait: { 
 					minutes: node.wait_minutes,
-					descendants: this.getAllChildrenNodes(node, model).map((node) => node.id)
+					descendants: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
 				}
 			}
 		}
 	}
 
+	formatDescendant = (node, parentNode) => {
+		let descendant= {
+			uuid: node.id
+		};
+
+		if(parentNode.type === "segment") {
+			descendant.segment = {
+				direction: node.portName === 'right' ? 'positive' : 'negative'
+			};
+		}
+
+		return descendant;
+	}
+
 	discardChanges = () => {
 		const model = this.props.app.getDiagramEngine().getDiagramModel();
-		const payload = JSON.parse(localStorage.getItem('payload'));
 
 		Object.entries(model.nodes).map((node) => {
-			console.log(node[1]);
 			node[1].remove();
 		});
 
-		this.props.app.renderPayload(payload);
+		this.props.app.renderPayloadFromApi();
 		this.props.app.getDiagramEngine().repaintCanvas();
 	}
 
