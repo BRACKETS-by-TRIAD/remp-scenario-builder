@@ -6,7 +6,7 @@ export class NodeModel extends BaseNodeModel {
 	constructor(element: object) {
 		super("action");
 		
-		this.name = element.title || 'Send email';
+		this.name = element.name || 'Send email';
 		this.addPort(new PortModel("left"));
 		this.addPort(new PortModel("right"));
 	}

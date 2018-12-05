@@ -6,7 +6,7 @@ export class NodeModel extends BaseNodeModel {
 	constructor(element: object) {
 		super("trigger");
 		
-		this.name = element.title || 'Event';
+		this.name = element.name || 'Event';
 		this.addPort(new PortModel("right"));
 	}
 

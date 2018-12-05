@@ -58,6 +58,7 @@ export class Application {
 		this.registerCustomModels();
 		this.renderService.renderPayload(this.payload);
 		this.diagramEngine.setDiagramModel(this.activeModel);
+		this.diagramEngine.repaintCanvas();
 	}
 
 	registerCustomModels() {

@@ -6,8 +6,9 @@ export class NodeModel extends BaseNodeModel {
 	constructor(element: object) {
 		super("segment");
 
-		const { id, name } = element.segment;
-		this.segment = { id, name };
+		const { id, name } = element;
+		const code = element.segment.code
+		this.segment = { id, name, code };
 
 		// this.addPort(new PortModel("top"));
 		this.addPort(new PortModel("left"));
