@@ -18,7 +18,7 @@ export class ExportService {
         const serializedModel = this.model.serializeDiagram();
         
 		payload.triggers = serializedModel.nodes.filter((node) => node.type == 'trigger')
-											    .map((node) => this.formatNode(node, this.model));
+											    .map((node) => this.formatNode(node));
 		
 		payload.elements = {};
 		payload.visual = {};
@@ -32,23 +32,23 @@ export class ExportService {
 
 		Object.entries(this.model.getNodes()).map((node) => {
 			if(node[1].type !== 'trigger') {
-				payload.elements[node[0]] = this.formatNode(node[1].serialize(), this.model);
+				payload.elements[node[0]] = this.formatNode(node[1].serialize());
 			}
 		});
 
         return payload;
     }
 
-    getAllChildrenNodes(node, model, portName = "right") {
+    getAllChildrenNodes(node, portName = "right") {
 		const port = node.ports.find((port) => port.name == portName);
 
 		return port.links.map((link) => {
 			let nextNode = null;
 
-			if(model.links[link].targetPort.parent.id !== node.id) {
-				nextNode = model.links[link].targetPort.parent;
+			if(this.model.links[link].targetPort.parent.id !== node.id) {
+				nextNode = this.model.links[link].targetPort.parent;
 			} else {
-				nextNode = model.links[link].sourcePort.parent;
+				nextNode = this.model.links[link].sourcePort.parent;
 			}
 
 			// return this.formatNode(nextNode.serialize(), model);
@@ -56,7 +56,7 @@ export class ExportService {
 		});
 	}
 
-	formatNode(node, model) {
+	formatNode(node) {
 		if (node.type === "action") {
 			return 					{
 				uuid: node.id,
@@ -67,12 +67,12 @@ export class ExportService {
 					email: {
 						code: 'mail_template_123'
 					},
-					descendants: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
+					descendants: this.getAllChildrenNodes(node).map((descendantNode) => this.formatDescendant(descendantNode, node))
 				}
 			}
 		} else if(node.type === "segment") {
-			const descendantsPositive = this.getAllChildrenNodes(node, model, "right").map((descendantNode) => this.formatDescendant(descendantNode, node));
-			const descendantsNegative = this.getAllChildrenNodes(node, model, "bottom").map((descendantNode) => this.formatDescendant(descendantNode, node))
+			const descendantsPositive = this.getAllChildrenNodes(node, "right").map((descendantNode) => this.formatDescendant(descendantNode, node));
+			const descendantsNegative = this.getAllChildrenNodes(node, "bottom").map((descendantNode) => this.formatDescendant(descendantNode, node))
 
 			return {
 				uuid: node.id,
@@ -91,7 +91,7 @@ export class ExportService {
 				event: {
 					name: 'registration'
 				},
-				elements: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
+				elements: this.getAllChildrenNodes(node).map((descendantNode) => this.formatDescendant(descendantNode, node))
 			}
 		} else if(node.type === "wait") {
 			return {
@@ -100,7 +100,7 @@ export class ExportService {
 				type: 'wait',
 				wait: { 
 					minutes: node.wait_minutes,
-					descendants: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
+					descendants: this.getAllChildrenNodes(node).map((descendantNode) => this.formatDescendant(descendantNode, node))
 				}
 			}
 		}
