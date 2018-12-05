@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as _ from "lodash";
+import axios from "axios";
 
 import { 
 	DiagramWidget,
@@ -23,6 +24,8 @@ import ActionIcon from '@material-ui/icons/Mail';
 import TriggerIcon from '@material-ui/icons/Notifications';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
 import SegmentIcon from '@material-ui/icons/SubdirectoryArrowRight';
+
+import * as config from './../../config';
 
 import { Application } from "./../Application";
 import { TrayItemWidget } from "./TrayItemWidget";
@@ -71,8 +74,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 		super(props);
 		this.state = {};
 
-		this.activeModel = this.props.app.getDiagramEngine().getDiagramModel();
-		this.exportService = new ExportService(this.activeModel);
+		axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN; 
 	}
 
 	cloneSelected = () => {
@@ -102,13 +104,24 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 	}
 
 	saveChanges = () => {
-		// const model = this.props.app.getDiagramEngine().getDiagramModel();
-		// const serializedModel = model.serializeDiagram();	
+		const exportService = new ExportService(this.props.app.getDiagramEngine().getDiagramModel());
 
-		const payload = this.exportService.export();
+		const payload = {
+			id: 1, //FIXME: hardcoded
+			name: 'Test Scenario',  //FIXME: hardcoded
+			...exportService.exportPayload()
+		}
+
+		// localStorage.setItem('payload', JSON.stringify(payload));
 		console.log(payload);
-		
-		localStorage.setItem('payload', JSON.stringify(payload));
+
+		axios.post(`${config.URL_SCENARIO_CREATE}`, payload)
+			.then(response => {
+				console.log(response);
+			})
+			.catch(error => {
+				console.log(error.response);
+			});
 	}
 
 	discardChanges = () => {

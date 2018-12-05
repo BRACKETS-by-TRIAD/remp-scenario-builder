@@ -1,5 +1,3 @@
-import flatMap from "lodash/flatMap";
-
 // import the custom models
 import {
     Action,
@@ -13,16 +11,17 @@ export class ExportService {
         this.model = model;
     }
     
-    export() {
+    exportPayload() {
         const payload  = {};
         const serializedModel = this.model.serializeDiagram();
         
-		payload.triggers = serializedModel.nodes.filter((node) => node.type == 'trigger')
-											    .map((node) => this.formatNode(node));
+        payload.triggers = {};
+        payload.elements = {};
+        payload.visual = {};
+        
+		serializedModel.nodes.filter((node) => node.type == 'trigger')
+							 .map((node) => payload.triggers[node.id] = this.formatNode(node));
 		
-		payload.elements = {};
-		payload.visual = {};
-
 		Object.entries(this.model.getNodes()).map((node) => {
 			payload.visual[node[0]] = {
 				x: node[1].x,
@@ -56,11 +55,12 @@ export class ExportService {
 		});
 	}
 
+    //FIXME: hardcoded data
 	formatNode(node) {
 		if (node.type === "action") {
 			return 					{
-				uuid: node.id,
-				title: node.name,
+				id: node.id,
+				name: node.name,
 				type: 'action',
 				action: {
 					type: 'email',
@@ -75,28 +75,29 @@ export class ExportService {
 			const descendantsNegative = this.getAllChildrenNodes(node, "bottom").map((descendantNode) => this.formatDescendant(descendantNode, node))
 
 			return {
-				uuid: node.id,
-				name: 'nieco',
+				id: node.id,
+                name: 'Všetci používatelia',
+                type: 'segment',
 				segment: {
-					code: 'segment1',
+					code: 'all_users',
 					descendants: [...descendantsPositive, ...descendantsNegative]
 				},
-				type: 'segment',
 			}
 		} else if(node.type === "trigger") {
 			return {
-				uuid: node.id,
-				title: node.name,
-				type: 'event',
+				id: node.id,
+				name: node.name,
+				type: 'trigger',
 				event: {
-					name: 'registration'
+					code: 'user_created'
 				},
-				elements: this.getAllChildrenNodes(node).map((descendantNode) => this.formatDescendant(descendantNode, node))
+                // elements: this.getAllChildrenNodes(node).map((descendantNode) => this.formatDescendant(descendantNode, node))
+                elements: this.getAllChildrenNodes(node).map((descendantNode) => descendantNode.id)
 			}
 		} else if(node.type === "wait") {
 			return {
-				uuid: node.id,
-				title: node.name,
+				id: node.id,
+				name: node.name,
 				type: 'wait',
 				wait: { 
 					minutes: node.wait_minutes,

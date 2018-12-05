@@ -41,10 +41,10 @@ export class Application {
 	}
 
 	renderPayloadFromApi() {
-		axios.get(`${config.URL_SCENARIOS}`)
+		axios.get(`${config.URL_SCENARIO_DETAIL}`)
 			.then(response => {
 				this.payload = response.data;
-				// console.log(this.payload);
+				console.log(this.payload);
 				// console.log(JSON.parse(localStorage.getItem('payload')));
 
 				this.renderPaylod();
@@ -55,13 +55,12 @@ export class Application {
 	}
 
 	renderPaylod() {
-		this.registerModels();
+		this.registerCustomModels();
 		this.renderService.renderPayload(this.payload);
-
 		this.diagramEngine.setDiagramModel(this.activeModel);
 	}
 
-	registerModels() {
+	registerCustomModels() {
 		this.diagramEngine.registerLinkFactory(new LinkFactory());
 		this.diagramEngine.registerPortFactory(new SimplePortFactory("action", config => new Action.PortModel()));
 		this.diagramEngine.registerNodeFactory(new Action.NodeFactory());
