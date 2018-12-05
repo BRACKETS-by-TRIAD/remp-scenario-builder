@@ -27,6 +27,8 @@ import SegmentIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import { Application } from "./../Application";
 import { TrayItemWidget } from "./TrayItemWidget";
 
+import { ExportService } from "./../../services/ExportService";
+
 import {
 	Action,
 	Segment,
@@ -68,6 +70,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 	constructor(props: BodyWidgetProps) {
 		super(props);
 		this.state = {};
+
+		this.activeModel = this.props.app.getDiagramEngine().getDiagramModel();
+		this.exportService = new ExportService(this.activeModel);
 	}
 
 	cloneSelected = () => {
@@ -97,116 +102,13 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 	}
 
 	saveChanges = () => {
-		const payload  = {};
-		const model = this.props.app.getDiagramEngine().getDiagramModel();
-		const serializedModel = model.serializeDiagram();	
+		// const model = this.props.app.getDiagramEngine().getDiagramModel();
+		// const serializedModel = model.serializeDiagram();	
 
-		// console.log(model);
-		// console.log(serializedModel);
-		
-		payload.triggers = serializedModel.nodes.filter((node) => node.type == 'trigger')
-											    .map((node) => this.formatNode(node, model));
-		
-		payload.elements = {};
-		payload.visual = {};
-
-		Object.entries(model.getNodes()).map((node) => {
-			payload.visual[node[0]] = {
-				x: node[1].x,
-				y: node[1].y
-			}
-		});
-
-		Object.entries(model.getNodes()).map((node) => {
-			if(node[1].type !== 'trigger') {
-				payload.elements[node[0]] = this.formatNode(node[1].serialize(), model);
-			}
-		});
-
+		const payload = this.exportService.export();
 		console.log(payload);
 		
 		localStorage.setItem('payload', JSON.stringify(payload));
-	}
-
-	getAllChildrenNodes(node, model, portName = "right") {
-		const port = node.ports.find((port) => port.name == portName);
-
-		return port.links.map((link) => {
-			let nextNode = null;
-
-			if(model.links[link].targetPort.parent.id !== node.id) {
-				nextNode = model.links[link].targetPort.parent;
-			} else {
-				nextNode = model.links[link].sourcePort.parent;
-			}
-
-			// return this.formatNode(nextNode.serialize(), model);
-			return { ...nextNode.serialize(), portName };
-		});
-	}
-
-	formatNode(node, model) {
-		if (node.type === "action") {
-			return 					{
-				uuid: node.id,
-				title: node.name,
-				type: 'action',
-				action: {
-					type: 'email',
-					email: {
-						code: 'mail_template_123'
-					},
-					descendants: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
-				}
-			}
-		} else if(node.type === "segment") {
-			const descendantsPositive = this.getAllChildrenNodes(node, model, "right").map((descendantNode) => this.formatDescendant(descendantNode, node));
-			const descendantsNegative = this.getAllChildrenNodes(node, model, "bottom").map((descendantNode) => this.formatDescendant(descendantNode, node))
-
-			return {
-				uuid: node.id,
-				name: 'nieco',
-				segment: {
-					code: 'segment1',
-					descendants: [...descendantsPositive, ...descendantsNegative]
-				},
-				type: 'segment',
-			}
-		} else if(node.type === "trigger") {
-			return {
-				uuid: node.id,
-				title: node.name,
-				type: 'event',
-				event: {
-					name: 'registration'
-				},
-				elements: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
-			}
-		} else if(node.type === "wait") {
-			return {
-				uuid: node.id,
-				title: node.name,
-				type: 'wait',
-				wait: { 
-					minutes: node.wait_minutes,
-					descendants: this.getAllChildrenNodes(node, model).map((descendantNode) => this.formatDescendant(descendantNode, node))
-				}
-			}
-		}
-	}
-
-	formatDescendant = (node, parentNode) => {
-		let descendant= {
-			uuid: node.id
-		};
-
-		if(parentNode.type === "segment") {
-			descendant.segment = {
-				direction: node.portName === 'right' ? 'positive' : 'negative'
-			};
-		}
-
-		return descendant;
 	}
 
 	discardChanges = () => {
