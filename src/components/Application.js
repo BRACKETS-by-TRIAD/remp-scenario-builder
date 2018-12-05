@@ -2,8 +2,8 @@ import {
 	DiagramEngine,
 	DiagramModel,
 	// DefaultNodeModel,
-	LinkModel,
-	NodeModel
+	// LinkModel,
+	// NodeModel
 	// LinkModel,
 	// DefaultPortModel,
 	// DiagramWidget

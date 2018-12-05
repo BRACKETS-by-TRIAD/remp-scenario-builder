@@ -8,7 +8,7 @@ import NopeIcon from '@material-ui/icons/Close';
 import { PortWidget } from "./../../widgets/PortWidget";
 import { NodeModel } from "./NodeModel";
 
-import Grid from '@material-ui/core/Grid';
+// import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';

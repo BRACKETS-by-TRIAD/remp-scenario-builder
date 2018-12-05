@@ -1,11 +1,3 @@
-// import the custom models
-import {
-    Action,
-    Segment,
-    Trigger,
-    Wait
-} from "./../components/elements";
-
 export class ExportService {
 	constructor(model) {
         this.model = model;
