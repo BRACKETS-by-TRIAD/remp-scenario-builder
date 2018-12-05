@@ -17,7 +17,7 @@ export function updateSegments(segments) {
 export function fetchSegments() {
     return dispatch => {
         return axios.get(`${config.URL_SEGMENTS_INDEX}`)
-                    .then(response => dispatch(updateSegments(response.data.groups)))
+                    .then(response => dispatch(updateSegments(response.data.segments)))
                     .catch(error => {
                         // context.commit('notification', {
                         //   show: true,

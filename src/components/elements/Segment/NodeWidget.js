@@ -158,7 +158,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 										this.setState({
 											nodeSegmentId: event.target.value,
 											nodeFormName: this.props.segments.find(function(segment) {
-												return segment.id === event.target.value;
+												return segment.code === event.target.value;
 											}).name
 										});
 									}}
@@ -166,7 +166,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 									margin="normal"
 								>
 									{this.props.segments && this.props.segments.map(option => (
-										<MenuItem key={`segment-id-${option.id}`} value={option.id}>
+										<MenuItem key={`segment-code-${option.code}`} value={option.code}>
 											{option.name}
 										</MenuItem>
 									))}
