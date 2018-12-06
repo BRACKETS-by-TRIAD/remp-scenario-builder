@@ -79,7 +79,7 @@ export class ExportService {
 			return {
 				id: node.id,
 				name: node.name,
-				type: 'trigger',
+				type: 'event',
 				event: {
 					code: 'user_created'
 				},

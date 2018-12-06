@@ -19,7 +19,7 @@ export class RenderService {
         
 		const nodes = flatMap(payload.triggers, ((trigger) => {
 			const triggerVisual = payload.visual[trigger.id];
-			trigger.type = "trigger";
+			// trigger.type = "trigger";
 
 			return this.renderElements(trigger, triggerVisual);
 		}));
@@ -29,7 +29,7 @@ export class RenderService {
 		let nodes = [];
 		let node = null;
 
-		if(element.type === 'trigger') {
+		if(element.type === 'event') {
 			node = new Trigger.NodeModel(element);
 			
 			nodes = element.elements.flatMap((elementId) => {
