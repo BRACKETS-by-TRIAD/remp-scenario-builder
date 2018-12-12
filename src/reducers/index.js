@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
 import SegmentsReducer from './SegmentsReducer';
+import TriggersReducer from './TriggersReducer';
 
 export default combineReducers({
-    segments: SegmentsReducer,
+  segments: SegmentsReducer,
+  triggers: TriggersReducer
 });

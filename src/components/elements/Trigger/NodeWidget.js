@@ -1,7 +1,8 @@
-import * as React from "react";
-import { PortWidget } from "./../../widgets/PortWidget";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { PortWidget } from './../../widgets/PortWidget';
 import TriggerIcon from '@material-ui/icons/Notifications';
-import { NodeModel } from "./NodeModel";
+import { NodeModel } from './NodeModel';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -10,136 +11,173 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
+import Select from 'react-select';
 
 export interface NodeWidgetProps {
-	node: NodeModel;
-	className: string;
-	classBaseName: string;
+  node: NodeModel;
+  className: string;
+  classBaseName: string;
 }
 
 export interface NodeWidgetState {}
 
-export class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
-	static defaultProps: NodeWidgetProps = {
-		node: null
-	};
+class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
+  static defaultProps: NodeWidgetProps = {
+    node: null
+  };
 
-	constructor(props: NodeWidgetProps) {
-		super(props);
-		
-		this.state = {
-			nodeFormName: this.props.node.name,
-			dialogOpened: false
-		};
-	}
+  constructor(props: NodeWidgetProps) {
+    super(props);
 
-	bem(selector: string): string {
-		return this.props.classBaseName + selector + " " + this.props.className + selector + " ";
-	}
+    this.state = {
+      nodeFormName: this.props.node.name,
+      nodeTriggerCode: '',
+      dialogOpened: false
+    };
+  }
 
-	getClassName() {
-		return this.props.classBaseName + " " +this.props.className;
-	}
+  bem(selector: string): string {
+    return (
+      this.props.classBaseName +
+      selector +
+      ' ' +
+      this.props.className +
+      selector +
+      ' '
+    );
+  }
 
-	openDialog = () => {
-		this.setState({ 
-			dialogOpened: true,
-			nodeFormName: this.props.node.name,
-		});
-	};
-	
-	closeDialog = () => {
-		this.setState({ dialogOpened: false });
-	};
+  getClassName() {
+    return this.props.classBaseName + ' ' + this.props.className;
+  }
 
-	render() {
-		return (
-			<div 
-				className={this.getClassName()} 
-				style={{ background: this.props.node.color }}
-				onDoubleClick={() => {
-					this.openDialog();
-				}}
-			>				
-				<div className="node-container">
-					<div className={this.bem("__icon")}>
-						<TriggerIcon />
-					</div>
+  openDialog = () => {
+    this.setState({
+      dialogOpened: true,
+      nodeFormName: this.props.node.name
+    });
+  };
 
-					<div className={this.bem("__ports")}>
-						<div className={this.bem("__right")}>
-							<PortWidget name="right" node={this.props.node} />
-						</div>
-					</div>
-				</div>
+  closeDialog = () => {
+    this.setState({ dialogOpened: false });
+  };
 
-				<div className={this.bem("__title")}>
-					<div className={this.bem("__name")}>{this.props.node.name}</div>
-				</div>
+  render() {
+    console.log('ben', this.props);
+    return (
+      <div
+        className={this.getClassName()}
+        style={{ background: this.props.node.color }}
+        onDoubleClick={() => {
+          this.openDialog();
+        }}
+      >
+        <div className='node-container'>
+          <div className={this.bem('__icon')}>
+            <TriggerIcon />
+          </div>
 
-				<Dialog
-					open={this.state.dialogOpened}
-					onClose={this.closeDialog}
-					aria-labelledby="form-dialog-title"
-					onKeyUp={ (event) => {
-						if (event.keyCode === 46 || event.keyCode === 8) {
-						  event.preventDefault();
-						  event.stopPropagation();
-						  return false;
-						}
-					}}
-				>
-					<DialogTitle id="form-dialog-title">Trigger node</DialogTitle>
+          <div className={this.bem('__ports')}>
+            <div className={this.bem('__right')}>
+              <PortWidget name='right' node={this.props.node} />
+            </div>
+          </div>
+        </div>
 
-					<DialogContent>
-						<DialogContentText>
-							TODO: popis 
-							To subscribe to this website, please enter your email address here. We will send
-							updates occasionally.
-						</DialogContentText>
+        <div className={this.bem('__title')}>
+          <div className={this.bem('__name')}>{this.props.node.name}</div>
+        </div>
 
-						<TextField
-							autoFocus
-							margin="normal"
-							id="trigger-name"
-							label="Node name"
-							fullWidth
-							value={this.state.nodeFormName}
-							onChange={(event) => {
-								this.setState({
-									nodeFormName: event.target.value,
-								});
-							}}
-						/>	
-					</DialogContent>
+        <Dialog
+          open={this.state.dialogOpened}
+          onClose={this.closeDialog}
+          aria-labelledby='form-dialog-title'
+          onKeyUp={event => {
+            if (event.keyCode === 46 || event.keyCode === 8) {
+              event.preventDefault();
+              event.stopPropagation();
+              return false;
+            }
+          }}
+        >
+          <DialogTitle id='form-dialog-title'>Trigger node</DialogTitle>
 
-					<DialogActions>
-						<Button 
-							color="secondary"
-							onClick={() => {
-								this.closeDialog();
-							}} 
-						>
-							Cancel
-						</Button>
+          <DialogContent>
+            <DialogContentText>
+              TODO: popis To subscribe to this website, please enter your email
+              address here. We will send updates occasionally.
+            </DialogContentText>
 
-						<Button 
-							color="primary"
-							onClick={() => {
-								// https://github.com/projectstorm/react-diagrams/issues/50 huh
+            <Select
+              value={this.state.nodeTriggerCode}
+              onChange={event => {
+                this.setState({
+                  nodeTriggerCode: event.value
+                });
+              }}
+              options={this.props.triggers.map(trigger => {
+                return {
+                  value: trigger.code,
+                  label: trigger.name
+                };
+              })}
+              menuPosition={'fixed'} // absolute
+              menuPlacement={'bottom'}
+              menuPortalTarget={document.body}
+              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+            />
 
-								this.props.node.name = this.state.nodeFormName;
+            <TextField
+              autoFocus
+              margin='normal'
+              id='trigger-name'
+              label='Node name'
+              fullWidth
+              value={this.state.nodeFormName}
+              onChange={event => {
+                this.setState({
+                  nodeFormName: event.target.value
+                });
+              }}
+            />
+          </DialogContent>
 
-								this.props.diagramEngine.repaintCanvas();
-								this.closeDialog();
-							}} 
-						>
-							Save changes
-						</Button>
-					</DialogActions>
-				</Dialog>
-			</div>
-		);
-	}
+          <DialogActions>
+            <Button
+              color='secondary'
+              onClick={() => {
+                this.closeDialog();
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              color='primary'
+              onClick={() => {
+                // https://github.com/projectstorm/react-diagrams/issues/50 huh
+
+                this.props.node.name = this.state.nodeFormName;
+
+                this.props.diagramEngine.repaintCanvas();
+                this.closeDialog();
+              }}
+            >
+              Save changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
 }
+
+function mapStateToProps(state) {
+  const { triggers } = state;
+
+  return {
+    triggers: triggers.avalaibleTriggers
+  };
+}
+
+export default connect(mapStateToProps)(NodeWidget);
