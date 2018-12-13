@@ -16,6 +16,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MaterialSelect from '../../MaterialSelect';
+import groupBy from 'lodash/groupBy';
 
 export interface NodeWidgetProps {
   node: NodeModel;
@@ -62,6 +63,32 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 
   closeDialog = () => {
     this.setState({ dialogOpened: false });
+  };
+
+  transformOptionsForSelect = () => {
+    const lodashGrouped = groupBy(
+      this.props.segments,
+      segment => segment.group.name
+    );
+
+    const properlyGrouped = [];
+
+    Object.keys(lodashGrouped).forEach(key => {
+      properlyGrouped.push({
+        label: key,
+        sorting: lodashGrouped[key][0].group.sorting,
+        options: lodashGrouped[key].map(segment => ({
+          value: segment.code,
+          label: segment.name
+        }))
+      });
+    });
+
+    const properlyGroupedSorted = properlyGrouped.sort((a, b) => {
+      return a.sorting - b.sorting;
+    });
+
+    return properlyGroupedSorted;
   };
 
   render() {
@@ -136,12 +163,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               address here. We will send updates occasionally.
             </DialogContentText>
             <MaterialSelect
-              options={this.props.segments.map(segment => {
-                return {
-                  value: segment.code,
-                  label: segment.name
-                };
-              })}
+              options={this.transformOptionsForSelect()}
               value={this.state.nodeSegmentId}
               onChange={event => {
                 this.setState({
