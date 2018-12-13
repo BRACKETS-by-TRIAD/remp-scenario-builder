@@ -11,7 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from 'react-select';
+import MaterialSelect from '../../MaterialSelect';
 
 export interface NodeWidgetProps {
   node: NodeModel;
@@ -31,7 +31,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 
     this.state = {
       nodeFormName: this.props.node.name,
-      nodeTriggerCode: '',
+      // TODO: toto treba dat asi niekde do tej factory/modelu
+      selectedTrigger: {},
       dialogOpened: false
     };
   }
@@ -63,7 +64,6 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   };
 
   render() {
-    console.log('ben', this.props);
     return (
       <div
         className={this.getClassName()}
@@ -108,26 +108,25 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               address here. We will send updates occasionally.
             </DialogContentText>
 
-            <Select
-              value={this.state.nodeTriggerCode}
-              onChange={event => {
-                this.setState({
-                  nodeTriggerCode: event.value
-                });
-              }}
+            <MaterialSelect
               options={this.props.triggers.map(trigger => {
                 return {
                   value: trigger.code,
                   label: trigger.name
                 };
               })}
-              menuPosition={'fixed'} // absolute
-              menuPlacement={'bottom'}
-              menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+              value={this.state.selectedTrigger}
+              onChange={event => {
+                this.setState({
+                  selectedTrigger: event,
+                  nodeFormName: event.label
+                });
+              }}
+              placeholder='Pick one'
+              label='Selected Trigger'
             />
 
-            <TextField
+            {/* <TextField
               autoFocus
               margin='normal'
               id='trigger-name'
@@ -139,7 +138,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
                   nodeFormName: event.target.value
                 });
               }}
-            />
+            /> */}
           </DialogContent>
 
           <DialogActions>

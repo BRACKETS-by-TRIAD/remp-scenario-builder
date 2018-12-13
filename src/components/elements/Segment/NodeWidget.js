@@ -8,16 +8,14 @@ import NopeIcon from '@material-ui/icons/Close';
 import { PortWidget } from './../../widgets/PortWidget';
 import { NodeModel } from './NodeModel';
 
-// import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Select from 'react-select';
+import MaterialSelect from '../../MaterialSelect';
 
 export interface NodeWidgetProps {
   node: NodeModel;
@@ -137,73 +135,23 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               TODO: popis To subscribe to this website, please enter your email
               address here. We will send updates occasionally.
             </DialogContentText>
-
-            {/* <Grid container spacing={32}>
-							<Grid item xs={6}>
-								<TextField
-									autoFocus
-									margin="normal"
-									id="segment-name"
-									label="Node name"
-									fullWidth
-									value={this.state.nodeFormName}
-									onChange={(event) => {
-										this.setState({
-											nodeFormName: event.target.value,
-										});
-									}}
-								/>	
-							</Grid> */}
-
-            {/* <Grid item xs={6}> */}
-
-            <Select
-              value={this.state.nodeSegmentId}
-              onChange={event => {
-                this.setState({
-                  nodeSegmentId: event.value,
-                  nodeFormName: event.label
-                });
-              }}
+            <MaterialSelect
               options={this.props.segments.map(segment => {
                 return {
                   value: segment.code,
                   label: segment.name
                 };
               })}
-              menuPosition={'fixed'} // absolute
-              menuPlacement={'bottom'}
-              menuPortalTarget={document.body}
-              styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
-            />
-            {/* <TextField
-              id='select-segment'
-              select
-              label='Select segment'
               value={this.state.nodeSegmentId}
               onChange={event => {
                 this.setState({
-                  nodeSegmentId: event.target.value,
-                  nodeFormName: this.props.segments.find(function(segment) {
-                    return segment.code === event.target.value;
-                  }).name
+                  nodeSegmentId: event,
+                  nodeFormName: event.label
                 });
               }}
-              helperText='Please select your segment'
-              margin='normal'
-            >
-              {this.props.segments &&
-                this.props.segments.map(option => (
-                  <MenuItem
-                    key={`segment-code-${option.code}`}
-                    value={option.code}
-                  >
-                    {option.name}
-                  </MenuItem>
-                ))}
-            </TextField> */}
-            {/* </Grid>
-						</Grid> */}
+              placeholder='Pick one'
+              label='Selected Segment'
+            />
           </DialogContent>
 
           <DialogActions>
