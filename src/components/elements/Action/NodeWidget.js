@@ -13,6 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { setCanvasZoomingAndPanning } from '../../../actions';
+import StatisticsTooltip from '../../StatisticTooltip';
 
 export interface NodeWidgetProps {
   node: NodeModel;
@@ -31,7 +32,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     super(props);
     this.state = {
       nodeFormName: this.props.node.name,
-      dialogOpened: false
+      dialogOpened: false,
+      anchorElementForTooltip: null
     };
   }
 
@@ -71,6 +73,10 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
         onDoubleClick={() => {
           this.openDialog();
         }}
+        onMouseEnter={event =>
+          this.setState({ anchorElementForTooltip: event.currentTarget })
+        }
+        onMouseLeave={() => this.setState({ anchorElementForTooltip: null })}
       >
         <div className='node-container'>
           <div className={this.bem('__icon')}>
@@ -89,6 +95,11 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
         <div className={this.bem('__title')}>
           <div className={this.bem('__name')}>{this.props.node.name}</div>
         </div>
+
+        <StatisticsTooltip
+          id={this.props.node.id}
+          anchorElement={this.state.anchorElementForTooltip}
+        />
 
         <Dialog
           open={this.state.dialogOpened}

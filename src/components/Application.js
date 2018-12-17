@@ -1,86 +1,89 @@
 import {
-	DiagramEngine,
-	DiagramModel,
-	// DefaultNodeModel,
-	// LinkModel,
-	// NodeModel
-	// LinkModel,
-	// DefaultPortModel,
-	// DiagramWidget
-} from "storm-react-diagrams";
+  DiagramEngine,
+  DiagramModel
+  // DefaultNodeModel,
+  // LinkModel,
+  // NodeModel
+  // LinkModel,
+  // DefaultPortModel,
+  // DiagramWidget
+} from 'storm-react-diagrams';
 
 import axios from 'axios';
 
 // import the custom models
-import {
-    SimplePortFactory,
-    Action,
-    Segment,
-    Trigger,
-    Wait
-} from "./elements";
+import { SimplePortFactory, Action, Segment, Trigger, Wait } from './elements';
 
 import * as config from './../config';
 
-import "./sass/main.scss";
-import { LinkFactory } from "./elements/Link";
-import { RenderService } from "./../services/RenderService";
+import './sass/main.scss';
+import { LinkFactory } from './elements/Link';
+import { RenderService } from './../services/RenderService';
 
 export class Application {
-	activeModel: DiagramModel;
-	diagramEngine: DiagramEngine;
+  activeModel: DiagramModel;
+  diagramEngine: DiagramEngine;
 
-	constructor() {
-		this.diagramEngine = new DiagramEngine();
-		this.diagramEngine.installDefaultFactories();
-		this.activeModel = new DiagramModel();
-		this.renderService = new RenderService(this.activeModel);
-		
-		axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN; 
-		this.renderPayloadFromApi();
-	}
+  constructor() {
+    this.diagramEngine = new DiagramEngine();
+    this.diagramEngine.installDefaultFactories();
+    this.activeModel = new DiagramModel();
+    this.renderService = new RenderService(this.activeModel);
 
-	renderPayloadFromApi() {
-		axios.get(`${config.URL_SCENARIO_DETAIL}`)
-			.then(response => {
-				this.payload = response.data;
-				console.log(this.payload);
-				// console.log(JSON.parse(localStorage.getItem('payload')));
+    axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN;
+    this.renderPayloadFromApi();
+  }
 
-				this.renderPaylod();
-			})
-			.catch(error => {
-				console.log(error);
-			});
-	}
+  renderPayloadFromApi() {
+    axios
+      .get(`${config.URL_SCENARIO_DETAIL}`)
+      .then(response => {
+        this.payload = response.data;
+        // console.log(this.payload);
+        // console.log(JSON.parse(localStorage.getItem('payload')));
 
-	renderPaylod() {
-		this.registerCustomModels();
-		this.renderService.renderPayload(this.payload);
-		this.diagramEngine.setDiagramModel(this.activeModel);
-		this.diagramEngine.repaintCanvas();
-	}
+        this.renderPaylod();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
-	registerCustomModels() {
-		this.diagramEngine.registerLinkFactory(new LinkFactory());
-		this.diagramEngine.registerPortFactory(new SimplePortFactory("action", config => new Action.PortModel()));
-		this.diagramEngine.registerNodeFactory(new Action.NodeFactory());
-		
-		this.diagramEngine.registerPortFactory(new SimplePortFactory("segment", config => new Segment.PortModel()));
-		this.diagramEngine.registerNodeFactory(new Segment.NodeFactory());
+  renderPaylod() {
+    this.registerCustomModels();
+    this.renderService.renderPayload(this.payload);
+    this.diagramEngine.setDiagramModel(this.activeModel);
+    this.diagramEngine.repaintCanvas();
+  }
 
-		this.diagramEngine.registerPortFactory(new SimplePortFactory("trigger", config => new Trigger.PortModel()));
-		this.diagramEngine.registerNodeFactory(new Trigger.NodeFactory());
+  registerCustomModels() {
+    this.diagramEngine.registerLinkFactory(new LinkFactory());
+    this.diagramEngine.registerPortFactory(
+      new SimplePortFactory('action', config => new Action.PortModel())
+    );
+    this.diagramEngine.registerNodeFactory(new Action.NodeFactory());
 
-		this.diagramEngine.registerPortFactory(new SimplePortFactory("wait", config => new Wait.PortModel()));
-		this.diagramEngine.registerNodeFactory(new Wait.NodeFactory());
-	}
+    this.diagramEngine.registerPortFactory(
+      new SimplePortFactory('segment', config => new Segment.PortModel())
+    );
+    this.diagramEngine.registerNodeFactory(new Segment.NodeFactory());
 
-	getActiveDiagram(): DiagramModel {
-		return this.activeModel;
-	}
+    this.diagramEngine.registerPortFactory(
+      new SimplePortFactory('trigger', config => new Trigger.PortModel())
+    );
+    this.diagramEngine.registerNodeFactory(new Trigger.NodeFactory());
 
-	getDiagramEngine(): DiagramEngine {
-		return this.diagramEngine;
-	}
+    this.diagramEngine.registerPortFactory(
+      new SimplePortFactory('wait', config => new Wait.PortModel())
+    );
+    this.diagramEngine.registerNodeFactory(new Wait.NodeFactory());
+  }
+
+  getActiveDiagram(): DiagramModel {
+    return this.activeModel;
+  }
+
+  getDiagramEngine(): DiagramEngine {
+    return this.diagramEngine;
+  }
 }

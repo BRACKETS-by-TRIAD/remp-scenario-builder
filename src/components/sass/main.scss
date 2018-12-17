@@ -107,3 +107,18 @@
     cursor: -webkit-grabbing;
   }
 }
+
+.node-tooltip-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+// just temporary styles
+.node-tooltip-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
