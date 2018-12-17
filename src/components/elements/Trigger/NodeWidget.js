@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import MaterialSelect from '../../MaterialSelect';
+import { setCanvasZoomingAndPanning } from '../../../actions';
 
 export interface NodeWidgetProps {
   node: NodeModel;
@@ -57,10 +58,12 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
       dialogOpened: true,
       nodeFormName: this.props.node.name
     });
+    this.props.dispatch(setCanvasZoomingAndPanning(false));
   };
 
   closeDialog = () => {
     this.setState({ dialogOpened: false });
+    this.props.dispatch(setCanvasZoomingAndPanning(true));
   };
 
   render() {
