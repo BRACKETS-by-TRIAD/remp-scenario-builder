@@ -127,7 +127,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   discardChanges = () => {
     const model = this.props.app.getDiagramEngine().getDiagramModel();
 
-    Object.entries(model.nodes).map(node => {
+    // TODO: map->forEach
+    Object.entries(model.nodes).forEach(node => {
       node[1].remove();
     });
 
@@ -263,12 +264,12 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                 var data = JSON.parse(
                   event.dataTransfer.getData('storm-diagram-node')
                 );
-                var nodesCount = _.keys(
-                  this.props.app
-                    .getDiagramEngine()
-                    .getDiagramModel()
-                    .getNodes()
-                ).length;
+                // var nodesCount = _.keys(
+                //   this.props.app
+                //     .getDiagramEngine()
+                //     .getDiagramModel()
+                //     .getNodes()
+                // ).length;
 
                 var node = null;
                 if (data.type === 'action') {

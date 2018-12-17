@@ -1,101 +1,102 @@
-import flatMap from "lodash/flatMap";
+import flatMap from 'lodash/flatMap';
 
 // import the custom models
-import {
-    Action,
-    Segment,
-    Trigger,
-    Wait
-} from "./../components/elements";
+import { Action, Segment, Trigger, Wait } from './../components/elements';
 
 export class RenderService {
-	constructor(activeModel, payload = {}) {
-        this.activeModel = activeModel;
-        this.payload = payload;
-	}
+  constructor(activeModel, payload = {}) {
+    this.activeModel = activeModel;
+    this.payload = payload;
+  }
 
-	renderPayload(payload) {
-        this.payload = payload;
-        
-		const nodes = flatMap(payload.triggers, ((trigger) => {
-			const triggerVisual = payload.visual[trigger.id];
-			// trigger.type = "trigger";
+  renderPayload(payload) {
+    this.payload = payload;
 
-			return this.renderElements(trigger, triggerVisual);
-		}));
-	}
+    flatMap(payload.triggers, trigger => {
+      const triggerVisual = payload.visual[trigger.id];
+      // trigger.type = "trigger";
 
-	renderElements(element, visual) {
-		let nodes = [];
-		let node = null;
+      return this.renderElements(trigger, triggerVisual);
+    });
+  }
 
-		if(element.type === 'event') {
-			node = new Trigger.NodeModel(element);
-			
-			nodes = element.elements.flatMap((elementId) => {
-				const element = this.payload.elements[elementId];
-				const visual  = this.payload.visual[element.id];
+  renderElements(element, visual) {
+    let nodes = [];
+    let node = null;
 
-				const nextNodes = this.renderElements(element, visual);
-				const link = node.getPort("right").link(nextNodes[0].getPort("left")); //FIXME/REFACTOR: nextNodes[0] is the last added node, it works, but it's messy
+    if (element.type === 'event') {
+      node = new Trigger.NodeModel(element);
 
-				this.activeModel.addLink(link);
+      nodes = element.elements.flatMap(elementId => {
+        const element = this.payload.elements[elementId];
+        const visual = this.payload.visual[element.id];
 
-				return nextNodes;
-			});
-		} else if(element.type === 'action') {
-			node = new Action.NodeModel(element);
-			
-			nodes = element.action.descendants.flatMap((descendantObj) => {
-				const element = this.payload.elements[descendantObj.uuid];
-				const visual  = this.payload.visual[element.id];
+        const nextNodes = this.renderElements(element, visual);
+        const link = node.getPort('right').link(nextNodes[0].getPort('left')); //FIXME/REFACTOR: nextNodes[0] is the last added node, it works, but it's messy
 
-				const nextNodes = this.renderElements(element, visual);
-				const link = node.getPort("right").link(nextNodes[0].getPort("left"));
+        this.activeModel.addLink(link);
 
-				this.activeModel.addLink(link);
+        return nextNodes;
+      });
+    } else if (element.type === 'action') {
+      node = new Action.NodeModel(element);
 
-				return nextNodes;
-			});
+      nodes = element.action.descendants.flatMap(descendantObj => {
+        const element = this.payload.elements[descendantObj.uuid];
+        const visual = this.payload.visual[element.id];
 
-		} else if(element.type === 'segment') {
-			node = new Segment.NodeModel(element);
+        const nextNodes = this.renderElements(element, visual);
+        const link = node.getPort('right').link(nextNodes[0].getPort('left'));
 
-			nodes = element.segment.descendants.flatMap((descendantObj) => {
-				const element = this.payload.elements[descendantObj.uuid];
-				const visual  = this.payload.visual[element.id];
+        this.activeModel.addLink(link);
 
-				const nextNodes = this.renderElements(element, visual);
+        return nextNodes;
+      });
+    } else if (element.type === 'segment') {
+      node = new Segment.NodeModel(element);
 
-				if (descendantObj.segment && descendantObj.segment.direction === 'positive') {			
-					const link = node.getPort("right").link(nextNodes[0].getPort("left"));
-					this.activeModel.addLink(link);
-				} else if (descendantObj.segment && descendantObj.segment.direction === 'negative') {
-					const link = node.getPort("bottom").link(nextNodes[0].getPort("left"));
-					this.activeModel.addLink(link);
-				}
-				
-				return nextNodes;
-			});
+      nodes = element.segment.descendants.flatMap(descendantObj => {
+        const element = this.payload.elements[descendantObj.uuid];
+        const visual = this.payload.visual[element.id];
 
-		} else if(element.type === 'wait') {
-			node = new Wait.NodeModel(element);
+        const nextNodes = this.renderElements(element, visual);
 
-			nodes = element.wait.descendants.flatMap((descendantObj) => {
-				const element = this.payload.elements[descendantObj.uuid];
-				const visual  = this.payload.visual[element.id];
+        if (
+          descendantObj.segment &&
+          descendantObj.segment.direction === 'positive'
+        ) {
+          const link = node.getPort('right').link(nextNodes[0].getPort('left'));
+          this.activeModel.addLink(link);
+        } else if (
+          descendantObj.segment &&
+          descendantObj.segment.direction === 'negative'
+        ) {
+          const link = node
+            .getPort('bottom')
+            .link(nextNodes[0].getPort('left'));
+          this.activeModel.addLink(link);
+        }
 
-				const nextNodes = this.renderElements(element, visual);
-				const link = node.getPort("right").link(nextNodes[0].getPort("left"));
-				this.activeModel.addLink(link);
+        return nextNodes;
+      });
+    } else if (element.type === 'wait') {
+      node = new Wait.NodeModel(element);
 
-				return nextNodes;
-			});
-		}
+      nodes = element.wait.descendants.flatMap(descendantObj => {
+        const element = this.payload.elements[descendantObj.uuid];
+        const visual = this.payload.visual[element.id];
 
-		this.activeModel.addNode(node);
-		node.setPosition(visual.x, visual.y);
+        const nextNodes = this.renderElements(element, visual);
+        const link = node.getPort('right').link(nextNodes[0].getPort('left'));
+        this.activeModel.addLink(link);
 
-		return [node, ...nodes];
-	}
+        return nextNodes;
+      });
+    }
+
+    this.activeModel.addNode(node);
+    node.setPosition(visual.x, visual.y);
+
+    return [node, ...nodes];
+  }
 }

@@ -8,7 +8,6 @@ import NopeIcon from '@material-ui/icons/Close';
 import { PortWidget } from './../../widgets/PortWidget';
 import { NodeModel } from './NodeModel';
 
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
