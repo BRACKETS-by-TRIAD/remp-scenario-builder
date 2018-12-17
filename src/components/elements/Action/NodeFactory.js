@@ -1,22 +1,29 @@
-import {
-	AbstractNodeFactory,
-	DiagramEngine
-} from "storm-react-diagrams";
+import { AbstractNodeFactory, DiagramEngine } from 'storm-react-diagrams';
 
-import { NodeWidget } from "./NodeWidget";
-import { NodeModel } from "./NodeModel";
-import * as React from "react";
+import NodeWidget from './NodeWidget';
+import { NodeModel } from './NodeModel';
+import * as React from 'react';
 
 export class NodeFactory extends AbstractNodeFactory {
-	constructor() {
-		super("action");
-	}
+  constructor() {
+    super('action');
+  }
 
-	generateReactWidget(diagramEngine: DiagramEngine, node: NodeModel): JSX.Element {
-		return <NodeWidget diagramEngine={diagramEngine}  node={node} classBaseName="square-node" className="action-node" />;
-	}
+  generateReactWidget(
+    diagramEngine: DiagramEngine,
+    node: NodeModel
+  ): JSX.Element {
+    return (
+      <NodeWidget
+        diagramEngine={diagramEngine}
+        node={node}
+        classBaseName='square-node'
+        className='action-node'
+      />
+    );
+  }
 
-	getNewInstance() {
-		return new NodeModel();
-	}
+  getNewInstance() {
+    return new NodeModel();
+  }
 }
