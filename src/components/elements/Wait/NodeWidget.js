@@ -9,6 +9,10 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -34,6 +38,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     this.state = {
       nodeFormWaitingTime: this.props.node.wait_minutes,
       nodeFormName: this.props.node.name,
+      timeUnit: 'hours', // TODO: move this to model
       dialogOpened: false,
       anchorElementForTooltip: null
     };
@@ -149,11 +154,12 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
                   }}
                 />
               </Grid>
+            </Grid>
 
+            <Grid container spacing={32}>
               <Grid item xs={6}>
                 <TextField
                   autoFocus
-                  margin='normal'
                   id='waiting-time'
                   label='Waiting time'
                   type='number'
@@ -165,6 +171,27 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
                     });
                   }}
                 />
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl fullWidth>
+                  <InputLabel htmlFor='time-unit'>Time unit</InputLabel>
+                  <Select
+                    value={this.state.timeUnit}
+                    onChange={event => {
+                      this.setState({
+                        timeUnit: event.target.value
+                      });
+                    }}
+                    inputProps={{
+                      name: 'time-unit',
+                      id: 'time-unit'
+                    }}
+                  >
+                    <MenuItem value='minutes'>Minutes</MenuItem>
+                    <MenuItem value='hours'>Hours</MenuItem>
+                    <MenuItem value='days'>Days</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </DialogContent>
