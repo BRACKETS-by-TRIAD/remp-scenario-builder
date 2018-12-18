@@ -5,6 +5,7 @@ import { PortWidget } from './../../widgets/PortWidget';
 import ActionIcon from '@material-ui/icons/Mail';
 import { NodeModel } from './NodeModel';
 
+import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -130,19 +131,23 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               address here. We will send updates occasionally.
             </DialogContentText>
 
-            <TextField
-              autoFocus
-              margin='normal'
-              id='action-name'
-              label='Node name'
-              fullWidth
-              value={this.state.nodeFormName}
-              onChange={event => {
-                this.setState({
-                  nodeFormName: event.target.value
-                });
-              }}
-            />
+            <Grid container spacing={32}>
+              <Grid item xs={6}>
+                <TextField
+                  autoFocus
+                  margin='normal'
+                  id='action-name'
+                  label='Node name'
+                  fullWidth
+                  value={this.state.nodeFormName}
+                  onChange={event => {
+                    this.setState({
+                      nodeFormName: event.target.value
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
           </DialogContent>
 
           <DialogActions>

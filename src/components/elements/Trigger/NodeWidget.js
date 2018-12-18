@@ -4,6 +4,8 @@ import { PortWidget } from './../../widgets/PortWidget';
 import TriggerIcon from '@material-ui/icons/Notifications';
 import { NodeModel } from './NodeModel';
 
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -130,37 +132,45 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               address here. We will send updates occasionally.
             </DialogContentText>
 
-            <MaterialSelect
-              options={this.props.triggers.map(trigger => {
-                return {
-                  value: trigger.code,
-                  label: trigger.name
-                };
-              })}
-              value={this.state.selectedTrigger}
-              onChange={event => {
-                this.setState({
-                  selectedTrigger: event,
-                  nodeFormName: event.label
-                });
-              }}
-              placeholder='Pick one'
-              label='Selected Trigger'
-            />
+            <Grid container spacing={32}>
+              <Grid item xs={6}>
+                <TextField
+                  autoFocus
+                  margin='normal'
+                  id='trigger-name'
+                  label='Node name'
+                  fullWidth
+                  value={this.state.nodeFormName}
+                  onChange={event => {
+                    this.setState({
+                      nodeFormName: event.target.value
+                    });
+                  }}
+                />
+              </Grid>
+            </Grid>
 
-            {/* <TextField
-              autoFocus
-              margin='normal'
-              id='trigger-name'
-              label='Node name'
-              fullWidth
-              value={this.state.nodeFormName}
-              onChange={event => {
-                this.setState({
-                  nodeFormName: event.target.value
-                });
-              }}
-            /> */}
+            <Grid container spacing={32}>
+              <Grid item xs={12}>
+                <MaterialSelect
+                  options={this.props.triggers.map(trigger => {
+                    return {
+                      value: trigger.code,
+                      label: trigger.name
+                    };
+                  })}
+                  value={this.state.selectedTrigger}
+                  onChange={event => {
+                    this.setState({
+                      selectedTrigger: event,
+                      nodeFormName: event.label
+                    });
+                  }}
+                  placeholder='Pick one'
+                  label='Selected Trigger'
+                />
+              </Grid>
+            </Grid>
           </DialogContent>
 
           <DialogActions>
