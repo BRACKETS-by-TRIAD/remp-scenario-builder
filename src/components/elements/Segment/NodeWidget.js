@@ -59,7 +59,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     this.setState({
       dialogOpened: true,
       nodeFormName: this.props.node.segment.name,
-      nodeSegmentId: this.props.node.segment.id
+      nodeSegmentId: this.props.node.segment.id,
+      anchorElementForTooltip: null
     });
     this.props.dispatch(setCanvasZoomingAndPanning(false));
   };
@@ -95,6 +96,16 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     return properlyGroupedSorted;
   };
 
+  handleNodeMouseEnter = event => {
+    if (!this.state.dialogOpened) {
+      this.setState({ anchorElementForTooltip: event.currentTarget });
+    }
+  };
+
+  handleNodeMouseLeave = () => {
+    this.setState({ anchorElementForTooltip: null });
+  };
+
   render() {
     return (
       <div
@@ -102,10 +113,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
         onDoubleClick={() => {
           this.openDialog();
         }}
-        onMouseEnter={event =>
-          this.setState({ anchorElementForTooltip: event.currentTarget })
-        }
-        onMouseLeave={() => this.setState({ anchorElementForTooltip: null })}
+        onMouseEnter={this.handleNodeMouseEnter}
+        onMouseLeave={this.handleNodeMouseLeave}
       >
         <div className={this.bem('__title')}>
           <div className={this.bem('__name')}>

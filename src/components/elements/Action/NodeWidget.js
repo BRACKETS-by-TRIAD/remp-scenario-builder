@@ -55,7 +55,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   openDialog = () => {
     this.setState({
       dialogOpened: true,
-      nodeFormName: this.props.node.name
+      nodeFormName: this.props.node.name,
+      anchorElementForTooltip: null
     });
     this.props.dispatch(setCanvasZoomingAndPanning(false));
   };
@@ -63,6 +64,16 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   closeDialog = () => {
     this.setState({ dialogOpened: false });
     this.props.dispatch(setCanvasZoomingAndPanning(true));
+  };
+
+  handleNodeMouseEnter = event => {
+    if (!this.state.dialogOpened) {
+      this.setState({ anchorElementForTooltip: event.currentTarget });
+    }
+  };
+
+  handleNodeMouseLeave = () => {
+    this.setState({ anchorElementForTooltip: null });
   };
 
   render() {
@@ -73,10 +84,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
         onDoubleClick={() => {
           this.openDialog();
         }}
-        onMouseEnter={event =>
-          this.setState({ anchorElementForTooltip: event.currentTarget })
-        }
-        onMouseLeave={() => this.setState({ anchorElementForTooltip: null })}
+        onMouseEnter={this.handleNodeMouseEnter}
+        onMouseLeave={this.handleNodeMouseLeave}
       >
         <div className='node-container'>
           <div className={this.bem('__icon')}>
