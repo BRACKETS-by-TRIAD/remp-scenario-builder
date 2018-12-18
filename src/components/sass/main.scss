@@ -115,6 +115,18 @@
   padding: 20px;
 }
 
+.scenario-name {
+  &:hover {
+    cursor: pointer;
+  }
+}
+.changing-name-input {
+  font-size: 20px;
+  width: 100%;
+  border: 0;
+  padding: 2px 5px;
+}
+
 // just temporary styles
 .node-tooltip-wrapper {
   display: flex;

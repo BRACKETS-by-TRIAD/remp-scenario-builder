@@ -69,7 +69,11 @@ const styles = theme => ({
 class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   constructor(props: BodyWidgetProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      editingName: false,
+      name: 'Diagram',
+      editedName: ''
+    };
 
     axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN;
   }
@@ -136,6 +140,42 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     this.props.app.getDiagramEngine().repaintCanvas();
   };
 
+  startEditingName = () => {
+    this.setState({
+      editedName: this.state.name,
+      editingName: true
+    });
+  };
+
+  cancelEditingName = () => {
+    this.setState({
+      editedName: '',
+      editingName: false
+    });
+  };
+
+  submitEditingName = () => {
+    this.setState({
+      name: this.state.editedName,
+      editedName: '',
+      editingName: false
+    });
+  };
+
+  handleCloseAndSaveDuringChangingName = event => {
+    if (event.keyCode === 27) {
+      this.cancelEditingName();
+    } else if (event.keyCode === 13) {
+      this.submitEditingName();
+    }
+  };
+
+  handleNameTyping = event => {
+    this.setState({
+      editedName: event.target.value
+    });
+  };
+
   render() {
     const { classes, canvas } = this.props;
 
@@ -155,13 +195,30 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
           <AppBar position='fixed' className={classes.appBar}>
             <Toolbar>
               <Grid container>
-                <Grid item xs={2}>
+                <Grid item xs={4}>
                   <Typography variant='h6' color='inherit' noWrap>
-                    Diagram
+                    {this.state.editingName ? (
+                      <input
+                        autoFocus
+                        type='text'
+                        value={this.state.editedName}
+                        onChange={this.handleNameTyping}
+                        onKeyDown={this.handleCloseAndSaveDuringChangingName}
+                        onBlur={this.cancelEditingName}
+                        className='changing-name-input'
+                      />
+                    ) : (
+                      <span
+                        onClick={this.startEditingName}
+                        className='scenario-name'
+                      >
+                        {this.state.name}
+                      </span>
+                    )}
                   </Typography>
                 </Grid>
 
-                <Grid item xs={10}>
+                <Grid item xs={8}>
                   <Grid container direction='row' justify='flex-end'>
                     {/* <Button 
 										size="small"
