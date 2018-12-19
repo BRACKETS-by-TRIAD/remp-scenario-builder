@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 
-import { fetchSegments, fetchTriggers } from './actions';
+import {
+  fetchSegments,
+  fetchTriggers,
+  fetchScenario,
+  setScenarioName
+} from './actions';
 
 // import logo from './logo.svg';
 import './App.css';
@@ -17,21 +21,27 @@ class App extends Component {
 
     dispatch(fetchSegments());
     dispatch(fetchTriggers());
+
+    if (config.SCENARIO_ID) {
+      dispatch(fetchScenario(config.SCENARIO_ID));
+    } else {
+      dispatch(setScenarioName('Unnamed scenario'));
+    }
   }
 
   render() {
-    var app = new Application();
-    axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN;
+    var app = new Application(this.props.scenario.payload);
 
     return <BodyWidget app={app} segments={this.props.segments} />;
   }
 }
 
 function mapStateToProps(state) {
-  const { segments } = state;
+  const { segments, scenario } = state;
 
   return {
-    segments: segments.avalaibleSegments
+    segments: segments.avalaibleSegments,
+    scenario: scenario
   };
 }
 

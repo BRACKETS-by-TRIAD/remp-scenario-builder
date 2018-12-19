@@ -127,6 +127,45 @@
   padding: 2px 5px;
 }
 
+.circular-loading {
+  margin-right: 15px;
+  position: relative;
+  top: 7px;
+}
+
+.toast-success {
+  background-color: #5d9d52 !important;
+}
+
+.toast-error {
+  background-color: #c33e37 !important;
+}
+
+.toast-info {
+  background-color: #3477cb !important;
+}
+
+.toast-warning {
+  background-color: #f3a33a !important;
+}
+
+.toast__icon {
+  font-size: 20px;
+}
+
+.toast__icon-variant {
+  opacity: 0.9;
+  margin-right: 10px;
+}
+
+.toast__message {
+  display: flex;
+  align-items: center;
+}
+
+.toast-message {
+}
+
 // just temporary styles
 .node-tooltip-wrapper {
   display: flex;

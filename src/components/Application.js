@@ -9,12 +9,8 @@ import {
   // DiagramWidget
 } from 'storm-react-diagrams';
 
-import axios from 'axios';
-
 // import the custom models
 import { SimplePortFactory, Action, Segment, Trigger, Wait } from './elements';
-
-import * as config from './../config';
 
 import './sass/main.scss';
 import { LinkFactory } from './elements/Link';
@@ -24,29 +20,18 @@ export class Application {
   activeModel: DiagramModel;
   diagramEngine: DiagramEngine;
 
-  constructor() {
+  constructor(payload) {
     this.diagramEngine = new DiagramEngine();
     this.diagramEngine.installDefaultFactories();
     this.activeModel = new DiagramModel();
     this.renderService = new RenderService(this.activeModel);
+    this.payload = payload;
 
-    axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN;
-    this.renderPayloadFromApi();
-  }
-
-  renderPayloadFromApi() {
-    axios
-      .get(`${config.URL_SCENARIO_DETAIL}`)
-      .then(response => {
-        this.payload = response.data;
-        // console.log(this.payload);
-        // console.log(JSON.parse(localStorage.getItem('payload')));
-
-        this.renderPaylod();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (payload) {
+      this.renderPaylod();
+    } else {
+      this.registerCustomModels();
+    }
   }
 
   renderPaylod() {

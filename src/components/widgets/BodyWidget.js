@@ -1,15 +1,9 @@
 import * as React from 'react';
-import * as _ from 'lodash';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 
-import {
-  DiagramWidget,
-  // DiagramProps,
-  LinkModel,
-  NodeModel
-} from 'storm-react-diagrams';
+import { DiagramWidget } from 'storm-react-diagrams';
 
 import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,6 +15,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import ActionIcon from '@material-ui/icons/Mail';
 import TriggerIcon from '@material-ui/icons/Notifications';
@@ -31,8 +26,14 @@ import * as config from './../../config';
 
 import { Application } from './../Application';
 import { TrayItemWidget } from './TrayItemWidget';
-
+import {
+  setScenarioId,
+  setScenarioName,
+  setCanvasNotification,
+  setScenarioLoading
+} from '../../actions';
 import { ExportService } from './../../services/ExportService';
+import Notification from '../Notification';
 
 import { Action, Segment, Trigger, Wait } from './../elements';
 
@@ -71,11 +72,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     super(props);
     this.state = {
       editingName: false,
-      name: 'Diagram',
       editedName: ''
     };
-
-    axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN;
   }
 
   // cloneSelected = () => {
@@ -105,25 +103,46 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   // };
 
   saveChanges = () => {
+    const { dispatch } = this.props;
+
     const exportService = new ExportService(
       this.props.app.getDiagramEngine().getDiagramModel()
     );
 
     const payload = {
-      id: 1, //FIXME: hardcoded
-      name: 'Test Scenario', //FIXME: hardcoded
+      name: this.props.scenario.name,
       ...exportService.exportPayload()
     };
 
-    // localStorage.setItem('payload', JSON.stringify(payload));
-    console.log(payload);
+    const scenarioId = this.props.scenario.id;
+    if (scenarioId) {
+      payload.id = scenarioId;
+    }
 
+    dispatch(setScenarioLoading(true));
     axios
-      .post(`${config.URL_SCENARIO_CREATE}`, payload)
+      .post(`${config.URL_SCENARIO_CREATE}sad`, payload)
       .then(response => {
         console.log(response);
+        dispatch(setScenarioId(response.data.id));
+        dispatch(setScenarioLoading(false));
+        dispatch(
+          setCanvasNotification({
+            open: true,
+            variant: 'success',
+            text: 'Scenario saving succeeded.'
+          })
+        );
       })
       .catch(error => {
+        dispatch(setScenarioLoading(false));
+        dispatch(
+          setCanvasNotification({
+            open: true,
+            variant: 'error',
+            text: 'Scenario saving failed.'
+          })
+        );
         console.log(error.response);
       });
   };
@@ -142,7 +161,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 
   startEditingName = () => {
     this.setState({
-      editedName: this.state.name,
+      editedName: this.props.scenario.name,
       editingName: true
     });
   };
@@ -155,8 +174,13 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   };
 
   submitEditingName = () => {
+    if (this.state.editedName.length === 0) {
+      this.cancelEditingName();
+      return;
+    }
+
+    this.props.dispatch(setScenarioName(this.state.editedName));
     this.setState({
-      name: this.state.editedName,
       editedName: '',
       editingName: false
     });
@@ -174,6 +198,10 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     this.setState({
       editedName: event.target.value
     });
+  };
+
+  closeNotification = () => {
+    this.props.dispatch(setCanvasNotification({ open: false }));
   };
 
   render() {
@@ -212,7 +240,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                         onClick={this.startEditingName}
                         className='scenario-name'
                       >
-                        {this.state.name}
+                        {this.props.scenario.name}
                       </span>
                     )}
                   </Typography>
@@ -228,14 +256,20 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 									>
 										Zoom to fit
 									</Button> */}
-
+                    {!!this.props.scenario.loading && (
+                      <CircularProgress
+                        className='circular-loading'
+                        size={19}
+                        color='inherit'
+                      />
+                    )}
                     <Button
                       size='small'
                       variant='contained'
                       color='secondary'
                       onClick={() => this.saveChanges()}
                     >
-                      Save
+                      {this.props.scenario.id ? 'Update' : 'Save'}
                     </Button>
                     {/* &nbsp;
 									<Button 
@@ -311,6 +345,12 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
               />
             </List>
           </Drawer>
+          <Notification
+            variant={this.props.canvas.notification.variant}
+            text={this.props.canvas.notification.text}
+            open={this.props.canvas.notification.open}
+            handleClose={this.closeNotification}
+          />
 
           <main className={classes.content}>
             <div className={classes.toolbar} />
