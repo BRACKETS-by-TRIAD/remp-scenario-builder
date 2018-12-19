@@ -35,8 +35,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   constructor(props: NodeWidgetProps) {
     super(props);
     this.state = {
-      nodeFormName: this.props.node.segment.name,
-      nodeSegmentId: this.props.node.segment.id,
+      nodeFormName: this.props.node.name,
+      selectedSegment: this.props.node.selectedSegment,
       dialogOpened: false,
       anchorElementForTooltip: null
     };
@@ -60,8 +60,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   openDialog = () => {
     this.setState({
       dialogOpened: true,
-      nodeFormName: this.props.node.segment.name,
-      nodeSegmentId: this.props.node.segment.id,
+      nodeFormName: this.props.node.name,
+      selectedSegment: this.props.node.selectedSegment,
       anchorElementForTooltip: null
     });
     this.props.dispatch(setCanvasZoomingAndPanning(false));
@@ -108,6 +108,27 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     this.setState({ anchorElementForTooltip: null });
   };
 
+  getFormatedValue = () => {
+    const match = this.props.segments.find(segment => {
+      return segment.code === this.state.selectedSegment;
+    });
+
+    return match
+      ? {
+          value: match.code,
+          label: match.name
+        }
+      : {};
+  };
+
+  getSelectedSegmentValue = () => {
+    const selected = this.props.segments.find(
+      segment => segment.code === this.props.node.selectedSegment
+    );
+
+    return selected ? ` - ${selected.name}` : '';
+  };
+
   render() {
     return (
       <div
@@ -120,7 +141,9 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
       >
         <div className={this.bem('__title')}>
           <div className={this.bem('__name')}>
-            {this.props.node.segment.name}
+            {this.props.node.name
+              ? this.props.node.name
+              : `Segment ${this.getSelectedSegmentValue()}`}
           </div>
         </div>
 
@@ -190,7 +213,6 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
             <Grid container spacing={32}>
               <Grid item xs={6}>
                 <TextField
-                  autoFocus
                   margin='normal'
                   id='segment-name'
                   label='Node name'
@@ -209,11 +231,10 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               <Grid item xs={12}>
                 <MaterialSelect
                   options={this.transformOptionsForSelect()}
-                  value={this.state.nodeSegmentId}
+                  value={this.getFormatedValue()}
                   onChange={event => {
                     this.setState({
-                      nodeSegmentId: event,
-                      nodeFormName: event.label
+                      selectedSegment: event.value
                     });
                   }}
                   placeholder='Pick one'
@@ -238,8 +259,8 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               onClick={() => {
                 // https://github.com/projectstorm/react-diagrams/issues/50 huh
 
-                this.props.node.segment.name = this.state.nodeFormName;
-                this.props.node.segment.id = this.state.nodeSegmentId;
+                this.props.node.name = this.state.nodeFormName;
+                this.props.node.selectedSegment = this.state.selectedSegment;
 
                 this.props.diagramEngine.repaintCanvas();
                 this.closeDialog();

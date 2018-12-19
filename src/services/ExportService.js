@@ -74,13 +74,12 @@ export class ExportService {
       const descendantsNegative = this.getAllChildrenNodes(node, 'bottom').map(
         descendantNode => this.formatDescendant(descendantNode, node)
       );
-
       return {
         id: node.id,
-        name: 'Všetci používatelia',
+        name: node.name ? node.name : 'Segment', // TODO: remove 'Segment' when changed in API
         type: 'segment',
         segment: {
-          code: 'all_users',
+          code: node.selectedSegment ? node.selectedSegment : 'all_users',
           descendants: [...descendantsPositive, ...descendantsNegative]
         }
       };

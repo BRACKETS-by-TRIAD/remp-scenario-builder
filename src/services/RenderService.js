@@ -54,6 +54,7 @@ export class RenderService {
         return nextNodes;
       });
     } else if (element.type === 'segment') {
+      element.selectedSegment = element.segment.code;
       node = new Segment.NodeModel(element);
 
       nodes = element.segment.descendants.flatMap(descendantObj => {

@@ -119,14 +119,13 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       payload.id = scenarioId;
     }
 
-    console.log(payload);
+    // console.log(payload);
     // return;
 
     dispatch(setScenarioLoading(true));
     axios
       .post(`${config.URL_SCENARIO_CREATE}`, payload)
       .then(response => {
-        console.log(response);
         dispatch(setScenarioId(response.data.id));
         dispatch(setScenarioLoading(false));
         dispatch(
