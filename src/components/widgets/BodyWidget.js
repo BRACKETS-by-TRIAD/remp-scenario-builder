@@ -78,31 +78,31 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     axios.defaults.headers.common['Authorization'] = config.AUTH_TOKEN;
   }
 
-  cloneSelected = () => {
-    const engine = this.props.app.getDiagramEngine();
-    let offset = { x: 0, y: 100 };
-    let model = engine.getDiagramModel();
+  // cloneSelected = () => {
+  //   const engine = this.props.app.getDiagramEngine();
+  //   let offset = { x: 0, y: 100 };
+  //   let model = engine.getDiagramModel();
 
-    let itemMap = {};
-    _.forEach(model.getSelectedItems(), (item: BaseModel<any>) => {
-      let newItem = item.clone(itemMap);
+  //   let itemMap = {};
+  //   _.forEach(model.getSelectedItems(), (item: BaseModel<any>) => {
+  //     let newItem = item.clone(itemMap);
 
-      // offset the nodes slightly
-      if (newItem instanceof NodeModel) {
-        newItem.setPosition(newItem.x + offset.x, newItem.y + offset.y);
-        model.addNode(newItem);
-      } else if (newItem instanceof LinkModel) {
-        // offset the link points
-        newItem.getPoints().forEach(p => {
-          p.updateLocation({ x: p.getX() + offset.x, y: p.getY() + offset.y });
-        });
-        model.addLink(newItem);
-      }
-      newItem.selected = false;
-    });
+  //     // offset the nodes slightly
+  //     if (newItem instanceof NodeModel) {
+  //       newItem.setPosition(newItem.x + offset.x, newItem.y + offset.y);
+  //       model.addNode(newItem);
+  //     } else if (newItem instanceof LinkModel) {
+  //       // offset the link points
+  //       newItem.getPoints().forEach(p => {
+  //         p.updateLocation({ x: p.getX() + offset.x, y: p.getY() + offset.y });
+  //       });
+  //       model.addLink(newItem);
+  //     }
+  //     newItem.selected = false;
+  //   });
 
-    this.forceUpdate();
-  };
+  //   this.forceUpdate();
+  // };
 
   saveChanges = () => {
     const exportService = new ExportService(
@@ -128,17 +128,17 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       });
   };
 
-  discardChanges = () => {
-    const model = this.props.app.getDiagramEngine().getDiagramModel();
+  // discardChanges = () => {
+  //   const model = this.props.app.getDiagramEngine().getDiagramModel();
 
-    // TODO: map->forEach
-    Object.entries(model.nodes).forEach(node => {
-      node[1].remove();
-    });
+  //   // TODO: map->forEach
+  //   Object.entries(model.nodes).forEach(node => {
+  //     node[1].remove();
+  //   });
 
-    this.props.app.renderPayloadFromApi();
-    this.props.app.getDiagramEngine().repaintCanvas();
-  };
+  //   this.props.app.renderPayloadFromApi();
+  //   this.props.app.getDiagramEngine().repaintCanvas();
+  // };
 
   startEditingName = () => {
     this.setState({
@@ -318,9 +318,11 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             <div
               className='diagram-layer'
               onDrop={event => {
-                var data = JSON.parse(
-                  event.dataTransfer.getData('storm-diagram-node')
+                const stormDiagramNode = event.dataTransfer.getData(
+                  'storm-diagram-node'
                 );
+                if (!stormDiagramNode) return;
+                var data = JSON.parse(stormDiagramNode);
                 // var nodesCount = _.keys(
                 //   this.props.app
                 //     .getDiagramEngine()
@@ -366,7 +368,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 
 function mapStateToProps(state) {
   return {
-    canvas: state.canvas
+    canvas: state.canvas,
+    scenario: state.scenario
   };
 }
 
