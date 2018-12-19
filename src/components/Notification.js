@@ -43,7 +43,7 @@ class Notification extends React.Component {
 }
 
 Notification.propTypes = {
-  variant: PropTypes.oneOf(['success', 'warning', 'info', 'danger']).isRequired,
+  variant: PropTypes.oneOf(['success', 'warning', 'info', 'error']).isRequired,
   text: PropTypes.string.isRequired,
   handleClose: PropTypes.func,
   open: PropTypes.bool.isRequired
