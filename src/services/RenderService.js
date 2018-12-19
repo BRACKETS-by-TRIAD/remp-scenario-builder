@@ -25,6 +25,7 @@ export class RenderService {
     let node = null;
 
     if (element.type === 'event') {
+      element.selectedTrigger = element.event.code;
       node = new Trigger.NodeModel(element);
 
       nodes = element.elements.flatMap(elementId => {

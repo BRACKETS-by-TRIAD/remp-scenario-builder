@@ -87,10 +87,10 @@ export class ExportService {
     } else if (node.type === 'trigger') {
       return {
         id: node.id,
-        name: node.name,
+        name: node.name ? node.name : 'Event', // TODO: remove 'Event' when changed in API
         type: 'event',
         event: {
-          code: 'user_created'
+          code: node.selectedTrigger ? node.selectedTrigger : 'user_created'
         },
         // elements: this.getAllChildrenNodes(node).map((descendantNode) => this.formatDescendant(descendantNode, node))
         elements: this.getAllChildrenNodes(node).map(

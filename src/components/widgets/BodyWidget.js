@@ -119,9 +119,12 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       payload.id = scenarioId;
     }
 
+    console.log(payload);
+    // return;
+
     dispatch(setScenarioLoading(true));
     axios
-      .post(`${config.URL_SCENARIO_CREATE}sad`, payload)
+      .post(`${config.URL_SCENARIO_CREATE}`, payload)
       .then(response => {
         console.log(response);
         dispatch(setScenarioId(response.data.id));
@@ -143,7 +146,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             text: 'Scenario saving failed.'
           })
         );
-        console.log(error.response);
+        console.log(error);
       });
   };
 

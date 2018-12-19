@@ -34,8 +34,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 
     this.state = {
       nodeFormName: this.props.node.name,
-      // TODO: toto treba dat asi niekde do tej factory/modelu
-      selectedTrigger: {},
+      selectedTrigger: this.props.node.selectedTrigger,
       dialogOpened: false,
       anchorElementForTooltip: null
     };
@@ -80,6 +79,23 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     this.setState({ anchorElementForTooltip: null });
   };
 
+  getTriggersInSelectableFormat = () => {
+    return this.props.triggers.map(trigger => {
+      return {
+        value: trigger.code,
+        label: trigger.name
+      };
+    });
+  };
+
+  getSelectedTriggerValue = () => {
+    const selected = this.getTriggersInSelectableFormat().find(
+      trigger => trigger.value === this.props.node.selectedTrigger
+    );
+
+    return selected ? ` - ${selected.label}` : '';
+  };
+
   render() {
     return (
       <div
@@ -104,7 +120,11 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
         </div>
 
         <div className={this.bem('__title')}>
-          <div className={this.bem('__name')}>{this.props.node.name}</div>
+          <div className={this.bem('__name')}>
+            {this.props.node.name
+              ? this.props.node.name
+              : `Event ${this.getSelectedTriggerValue()}`}
+          </div>
         </div>
 
         <StatisticsTooltip
@@ -135,7 +155,6 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
             <Grid container spacing={32}>
               <Grid item xs={6}>
                 <TextField
-                  autoFocus
                   margin='normal'
                   id='trigger-name'
                   label='Node name'
@@ -153,17 +172,13 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
             <Grid container spacing={32}>
               <Grid item xs={12}>
                 <MaterialSelect
-                  options={this.props.triggers.map(trigger => {
-                    return {
-                      value: trigger.code,
-                      label: trigger.name
-                    };
-                  })}
-                  value={this.state.selectedTrigger}
+                  options={this.getTriggersInSelectableFormat()}
+                  value={this.getTriggersInSelectableFormat().find(
+                    option => option.value === this.state.selectedTrigger
+                  )}
                   onChange={event => {
                     this.setState({
-                      selectedTrigger: event,
-                      nodeFormName: event.label
+                      selectedTrigger: event.value
                     });
                   }}
                   placeholder='Pick one'
@@ -189,6 +204,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
                 // https://github.com/projectstorm/react-diagrams/issues/50 huh
 
                 this.props.node.name = this.state.nodeFormName;
+                this.props.node.selectedTrigger = this.state.selectedTrigger;
 
                 this.props.diagramEngine.repaintCanvas();
                 this.closeDialog();
