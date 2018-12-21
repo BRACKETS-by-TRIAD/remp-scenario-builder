@@ -40,6 +40,7 @@ export class RenderService {
         return nextNodes;
       });
     } else if (element.type === 'action') {
+      element.selectedMail = element.action.email.code;
       node = new Action.NodeModel(element);
 
       nodes = element.action.descendants.flatMap(descendantObj => {

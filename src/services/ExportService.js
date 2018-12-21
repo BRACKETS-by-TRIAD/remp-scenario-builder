@@ -50,17 +50,16 @@ export class ExportService {
     });
   }
 
-  //FIXME: hardcoded data
   formatNode(node) {
     if (node.type === 'action') {
       return {
         id: node.id,
-        name: node.name,
+        name: node.name ? node.name : '',
         type: 'action',
         action: {
           type: 'email',
           email: {
-            code: 'mail_template_123'
+            code: node.selectedMail
           },
           descendants: this.getAllChildrenNodes(node).map(descendantNode =>
             this.formatDescendant(descendantNode, node)

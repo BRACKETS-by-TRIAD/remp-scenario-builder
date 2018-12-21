@@ -5,7 +5,8 @@ import {
   fetchSegments,
   fetchTriggers,
   fetchScenario,
-  setScenarioName
+  setScenarioName,
+  fetchMails
 } from './actions';
 
 // import logo from './logo.svg';
@@ -21,6 +22,7 @@ class App extends Component {
 
     dispatch(fetchSegments());
     dispatch(fetchTriggers());
+    dispatch(fetchMails());
 
     if (config.SCENARIO_ID) {
       dispatch(fetchScenario(config.SCENARIO_ID));

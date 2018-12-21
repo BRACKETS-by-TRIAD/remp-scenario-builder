@@ -72,6 +72,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     this.props.dispatch(setCanvasZoomingAndPanning(true));
   };
 
+  // maybe refactor to more effective way if is a problem
   transformOptionsForSelect = () => {
     const lodashGrouped = groupBy(
       this.props.segments,

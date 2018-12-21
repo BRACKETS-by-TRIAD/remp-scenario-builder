@@ -13,8 +13,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import groupBy from 'lodash/groupBy';
 import { setCanvasZoomingAndPanning } from '../../../actions';
 import StatisticsTooltip from '../../StatisticTooltip';
+import MaterialSelect from '../../MaterialSelect';
 
 export interface NodeWidgetProps {
   node: NodeModel;
@@ -33,6 +35,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     super(props);
     this.state = {
       nodeFormName: this.props.node.name,
+      selectedMail: this.props.node.selectedMail,
       dialogOpened: false,
       anchorElementForTooltip: null
     };
@@ -77,6 +80,54 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     this.setState({ anchorElementForTooltip: null });
   };
 
+  getFormatedValue = () => {
+    const match = this.props.mails.find(mail => {
+      return mail.code === this.state.selectedMail;
+    });
+
+    return match
+      ? {
+          value: match.code,
+          label: match.name
+        }
+      : {};
+  };
+
+  // maybe refactor to more effective way if is a problem
+  transformOptionsForSelect = () => {
+    const lodashGrouped = groupBy(
+      this.props.mails,
+      mail => mail.mail_type.code
+    );
+
+    const properlyGrouped = [];
+
+    Object.keys(lodashGrouped).forEach(key => {
+      properlyGrouped.push({
+        label: lodashGrouped[key][0].mail_type.name,
+        sorting: lodashGrouped[key][0].mail_type.sorting,
+        options: lodashGrouped[key].map(mail => ({
+          value: mail.code,
+          label: mail.name
+        }))
+      });
+    });
+
+    const properlyGroupedSorted = properlyGrouped.sort((a, b) => {
+      return a.sorting - b.sorting;
+    });
+
+    return properlyGroupedSorted;
+  };
+
+  getSelectedMailValue = () => {
+    const selected = this.props.mails.find(
+      mail => mail.code === this.props.node.selectedMail
+    );
+
+    return selected ? ` - ${selected.name}` : '';
+  };
+
   render() {
     return (
       <div
@@ -103,7 +154,11 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
           </div>
         </div>
         <div className={this.bem('__title')}>
-          <div className={this.bem('__name')}>{this.props.node.name}</div>
+          <div className={this.bem('__name')}>
+            {this.props.node.name
+              ? this.props.node.name
+              : `Mail ${this.getSelectedMailValue()}`}
+          </div>
         </div>
 
         <StatisticsTooltip
@@ -134,7 +189,6 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
             <Grid container spacing={32}>
               <Grid item xs={6}>
                 <TextField
-                  autoFocus
                   margin='normal'
                   id='action-name'
                   label='Node name'
@@ -145,6 +199,22 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
                       nodeFormName: event.target.value
                     });
                   }}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={32}>
+              <Grid item xs={12}>
+                <MaterialSelect
+                  options={this.transformOptionsForSelect()}
+                  value={this.getFormatedValue()}
+                  onChange={event => {
+                    this.setState({
+                      selectedMail: event.value
+                    });
+                  }}
+                  placeholder='Pick one'
+                  label='Selected Mail'
                 />
               </Grid>
             </Grid>
@@ -166,6 +236,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
                 // https://github.com/projectstorm/react-diagrams/issues/50 huh
 
                 this.props.node.name = this.state.nodeFormName;
+                this.props.node.selectedMail = this.state.selectedMail;
 
                 this.props.diagramEngine.repaintCanvas();
                 this.closeDialog();
@@ -181,7 +252,9 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
 }
 
 function mapStateToProps(state) {
-  return {};
+  return {
+    mails: state.mails.availableMails
+  };
 }
 
 export default connect(mapStateToProps)(NodeWidget);
