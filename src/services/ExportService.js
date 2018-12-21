@@ -76,7 +76,7 @@ export class ExportService {
       );
       return {
         id: node.id,
-        name: node.name ? node.name : 'Segment', // TODO: remove 'Segment' when changed in API
+        name: node.name ? node.name : '',
         type: 'segment',
         segment: {
           code: node.selectedSegment ? node.selectedSegment : 'all_users',
@@ -86,7 +86,7 @@ export class ExportService {
     } else if (node.type === 'trigger') {
       return {
         id: node.id,
-        name: node.name ? node.name : 'Event', // TODO: remove 'Event' when changed in API
+        name: node.name ? node.name : '',
         type: 'event',
         event: {
           code: node.selectedTrigger ? node.selectedTrigger : 'user_created'
