@@ -99,10 +99,10 @@ export class ExportService {
     } else if (node.type === 'wait') {
       return {
         id: node.id,
-        name: node.name,
+        name: node.name ? node.name : '',
         type: 'wait',
         wait: {
-          minutes: node.wait_minutes,
+          [node.waitingUnit]: Number(node.waitingTime),
           descendants: this.getAllChildrenNodes(node).map(descendantNode =>
             this.formatDescendant(descendantNode, node)
           )

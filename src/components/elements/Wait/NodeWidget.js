@@ -36,9 +36,9 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   constructor(props: NodeWidgetProps) {
     super(props);
     this.state = {
-      nodeFormWaitingTime: this.props.node.wait_minutes,
+      nodeFormWaitingTime: this.props.node.waitingTime,
       nodeFormName: this.props.node.name,
-      timeUnit: 'hours', // TODO: move this to model
+      timeUnit: this.props.node.waitingUnit,
       dialogOpened: false,
       anchorElementForTooltip: null
     };
@@ -62,8 +62,9 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
   openDialog = () => {
     this.setState({
       dialogOpened: true,
-      nodeFormWaitingTime: this.props.node.wait_minutes,
+      nodeFormWaitingTime: this.props.node.waitingTime,
       nodeFormName: this.props.node.name,
+      timeUnit: this.props.node.waitingUnit,
       anchorElementForTooltip: null
     });
     this.props.dispatch(setCanvasZoomingAndPanning(false));
@@ -110,7 +111,11 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
         </div>
         <div className={this.bem('__title')}>
           <div className={this.bem('__name')}>
-            {this.props.node.name} ({this.props.node.wait_minutes} minutes)
+            {this.props.node.name
+              ? this.props.node.name
+              : `Wait - ${this.props.node.waitingTime} ${
+                  this.props.node.waitingUnit
+                }`}
           </div>
         </div>
 
@@ -141,7 +146,6 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
             <Grid container spacing={32}>
               <Grid item xs={6}>
                 <TextField
-                  autoFocus
                   margin='normal'
                   id='waiting-time'
                   label='Node name'
@@ -159,7 +163,6 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
             <Grid container spacing={32}>
               <Grid item xs={6}>
                 <TextField
-                  autoFocus
                   id='waiting-time'
                   label='Waiting time'
                   type='number'
@@ -211,8 +214,9 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
               onClick={() => {
                 // https://github.com/projectstorm/react-diagrams/issues/50 huh
 
-                this.props.node.wait_minutes = this.state.nodeFormWaitingTime;
+                this.props.node.waitingTime = this.state.nodeFormWaitingTime;
                 this.props.node.name = this.state.nodeFormName;
+                this.props.node.waitingUnit = this.state.timeUnit;
 
                 this.props.diagramEngine.repaintCanvas();
                 this.closeDialog();

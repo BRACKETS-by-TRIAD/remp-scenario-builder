@@ -82,6 +82,19 @@ export class RenderService {
         return nextNodes;
       });
     } else if (element.type === 'wait') {
+      if ('minutes' in element.wait) {
+        element.waitingTime = element.wait.minutes;
+        element.waitingUnit = 'minutes';
+      }
+      if ('hours' in element.wait) {
+        element.waitingTime = element.wait.hours;
+        element.waitingUnit = 'hours';
+      }
+      if ('days' in element.wait) {
+        element.waitingTime = element.wait.days;
+        element.waitingUnit = 'days';
+      }
+
       node = new Wait.NodeModel(element);
 
       nodes = element.wait.descendants.flatMap(descendantObj => {
