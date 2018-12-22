@@ -32,18 +32,15 @@ class App extends Component {
   }
 
   render() {
-    var app = new Application(this.props.scenario.payload);
+    var app = new Application(this.props.scenarioPayload);
 
-    return <BodyWidget app={app} segments={this.props.segments} />;
+    return <BodyWidget app={app} />;
   }
 }
 
 function mapStateToProps(state) {
-  const { segments, scenario } = state;
-
   return {
-    segments: segments.avalaibleSegments,
-    scenario: scenario
+    scenarioPayload: state.scenario.payload
   };
 }
 

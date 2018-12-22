@@ -119,10 +119,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       payload.id = scenarioId;
     }
 
-    // console.log(payload);
-    // return;
-
     dispatch(setScenarioLoading(true));
+
     axios
       .post(`${config.URL_SCENARIO_CREATE}`, payload)
       .then(response => {
@@ -376,9 +374,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                 if (data.type === 'action') {
                   node = new Action.NodeModel({});
                 } else if (data.type === 'segment') {
-                  node = new Segment.NodeModel({
-                    segment: this.props.segments[0]
-                  });
+                  node = new Segment.NodeModel({});
                 } else if (data.type === 'trigger') {
                   node = new Trigger.NodeModel({});
                 } else if (data.type === 'wait') {
