@@ -1,43 +1,29 @@
-// .srd-node--selected {
-//   .square-node, .round-node, .diamond-node {
-//     &__title {
-//       font-weight: 600;
-//     }
-//   }
-// }
-
-
-.square-node, .round-node, .diamond-node {
+.square-node,
+.round-node,
+.diamond-node {
   background-color: transparent;
-
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  // max-width: 150px;
   width: 150px;
 
   .node-container {
     position: relative;
     display: flex;
     align-items: center;
-
     width: 50px;
     height: 50px;
     border-radius: 5px;
-
     overflow: visible;
     background-color: white;
-
-    transition: all .15s;
+    transition: all 0.15s;
   }
 
   &__title {
     display: flex;
-    // white-space: nowrap;
     text-align: center;
-
-    font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
     font-weight: 500;
 
@@ -50,7 +36,7 @@
       cursor: pointer;
 
       &:hover {
-        opacity: 1.0;
+        opacity: 1;
       }
     }
   }
@@ -64,10 +50,11 @@
     display: flex;
     background-image: none;
     width: 100%;
-    
   }
 
-  &__left, &__right, &__bottom {
+  &__left,
+  &__right,
+  &__bottom {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -76,27 +63,27 @@
       border-radius: 13px;
       width: 13px;
       height: 13px;
-
       position: relative;
       background: white;
-      &:hover, &.selected {
-        background:#a291fb;
+      &:hover,
+      &.selected {
+        background: #a291fb;
       }
     }
   }
 
   &__left {
-      align-items: flex-start;
-      .port {
-        left: -6.5px;
-      }
-  } 
-  
+    align-items: flex-start;
+    .port {
+      left: -6.5px;
+    }
+  }
+
   &__right {
-      align-items: flex-end;
-      .port {
-        right: -6.5px;
-      }
+    align-items: flex-end;
+    .port {
+      right: -6.5px;
+    }
   }
 
   &__bottom {
@@ -117,10 +104,7 @@
 }
 
 .round-node {
-  .node-container{
-    // width: 75px;
-    // height: 75px;
-    // border-radius: 75px;
+  .node-container {
     border-radius: 50px;
   }
 }
@@ -132,4 +116,3 @@
     width: 100%;
   }
 }
-

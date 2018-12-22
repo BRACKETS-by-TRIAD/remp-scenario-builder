@@ -1,18 +1,13 @@
-
 $nodeColor: $lightViolet;
 
 .srd-node--selected {
-  .square-node.action-node .node-container { 
+  .square-node.action-node .node-container {
     box-shadow: 0 0 10px $nodeColor;
-
-    // background: $nodeColor;
-    // color: white;
-    // border: solid 2px white;
   }
 }
 
 .action-node {
-  .node-container{
+  .node-container {
     border: solid 2px $nodeColor;
     color: $nodeColor;
   }
@@ -21,11 +16,13 @@ $nodeColor: $lightViolet;
     color: $nodeColor;
   }
 
-  &__left, &__right{
+  &__left,
+  &__right {
     .port {
       box-shadow: 0 0 10px $nodeColor;
 
-      &:hover, &.selected {
+      &:hover,
+      &.selected {
         background: $nodeColor;
       }
     }

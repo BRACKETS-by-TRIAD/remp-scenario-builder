@@ -2,9 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-
 import { DiagramWidget } from 'storm-react-diagrams';
-
 import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,33 +14,22 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import ActionIcon from '@material-ui/icons/Mail';
 import TriggerIcon from '@material-ui/icons/Notifications';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
 import SegmentIcon from '@material-ui/icons/SubdirectoryArrowRight';
 
 import * as config from './../../config';
-
-import { Application } from './../Application';
 import { TrayItemWidget } from './TrayItemWidget';
+import { ExportService } from './../../services/ExportService';
+import Notification from '../Notification';
+import { Action, Segment, Trigger, Wait } from './../elements';
 import {
   setScenarioId,
   setScenarioName,
   setCanvasNotification,
   setScenarioLoading
 } from '../../actions';
-import { ExportService } from './../../services/ExportService';
-import Notification from '../Notification';
-
-import { Action, Segment, Trigger, Wait } from './../elements';
-
-export interface BodyWidgetProps {
-  app: Application;
-  segments: Array;
-}
-
-export interface BodyWidgetState {}
 
 const drawerWidth = 240;
 
@@ -67,40 +54,14 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar
 });
 
-class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
-  constructor(props: BodyWidgetProps) {
+class BodyWidget extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
       editingName: false,
       editedName: ''
     };
   }
-
-  // cloneSelected = () => {
-  //   const engine = this.props.app.getDiagramEngine();
-  //   let offset = { x: 0, y: 100 };
-  //   let model = engine.getDiagramModel();
-
-  //   let itemMap = {};
-  //   _.forEach(model.getSelectedItems(), (item: BaseModel<any>) => {
-  //     let newItem = item.clone(itemMap);
-
-  //     // offset the nodes slightly
-  //     if (newItem instanceof NodeModel) {
-  //       newItem.setPosition(newItem.x + offset.x, newItem.y + offset.y);
-  //       model.addNode(newItem);
-  //     } else if (newItem instanceof LinkModel) {
-  //       // offset the link points
-  //       newItem.getPoints().forEach(p => {
-  //         p.updateLocation({ x: p.getX() + offset.x, y: p.getY() + offset.y });
-  //       });
-  //       model.addLink(newItem);
-  //     }
-  //     newItem.selected = false;
-  //   });
-
-  //   this.forceUpdate();
-  // };
 
   saveChanges = () => {
     const { dispatch } = this.props;
@@ -146,18 +107,6 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
         console.log(error);
       });
   };
-
-  // discardChanges = () => {
-  //   const model = this.props.app.getDiagramEngine().getDiagramModel();
-
-  //   // TODO: map->forEach
-  //   Object.entries(model.nodes).forEach(node => {
-  //     node[1].remove();
-  //   });
-
-  //   this.props.app.renderPayloadFromApi();
-  //   this.props.app.getDiagramEngine().repaintCanvas();
-  // };
 
   startEditingName = () => {
     this.setState({
@@ -248,14 +197,6 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 
                 <Grid item xs={8}>
                   <Grid container direction='row' justify='flex-end'>
-                    {/* <Button 
-										size="small"
-										variant="contained" 
-										color="default"
-										onClick={() => this.props.app.getDiagramEngine().zoomToFit()}
-									>
-										Zoom to fit
-									</Button> */}
                     {!!this.props.scenario.loading && (
                       <CircularProgress
                         className='circular-loading'
@@ -271,24 +212,6 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                     >
                       {this.props.scenario.id ? 'Update' : 'Save'}
                     </Button>
-                    {/* &nbsp;
-									<Button 
-										size="small"
-										variant="contained" 
-										color="default"
-										onClick={() => this.discardChanges()}
-									>
-										Discard changes
-									</Button> */}
-                    {/* &nbsp;
-									<Button 
-										size="small"
-										variant="contained" 
-										color="secondary"
-										onClick={this.cloneSelected}
-									>
-										Clone Selected
-									</Button> */}
                   </Grid>
                 </Grid>
               </Grid>

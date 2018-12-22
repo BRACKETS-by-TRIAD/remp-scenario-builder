@@ -1,18 +1,13 @@
-
 $nodeColor: $lightOrange;
 
 .srd-node--selected {
-  .round-node.wait-node .node-container { 
+  .round-node.wait-node .node-container {
     box-shadow: 0 0 10px $nodeColor;
-
-    // background: $nodeColor;
-    // color: white;
-    // border: solid 2px white;
   }
 }
 
 .wait-node {
-  .node-container{
+  .node-container {
     border: solid 2px $nodeColor;
     color: $nodeColor;
   }
@@ -21,11 +16,13 @@ $nodeColor: $lightOrange;
     color: $nodeColor;
   }
 
-  &__left, &__right{
+  &__left,
+  &__right {
     .port {
       box-shadow: 0 0 10px $nodeColor;
 
-      &:hover, &.selected {
+      &:hover,
+      &.selected {
         background: $nodeColor;
       }
     }

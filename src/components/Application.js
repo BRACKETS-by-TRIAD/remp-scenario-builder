@@ -1,13 +1,4 @@
-import {
-  DiagramEngine,
-  DiagramModel
-  // DefaultNodeModel,
-  // LinkModel,
-  // NodeModel
-  // LinkModel,
-  // DefaultPortModel,
-  // DiagramWidget
-} from 'storm-react-diagrams';
+import { DiagramEngine, DiagramModel } from 'storm-react-diagrams';
 
 // import the custom models
 import { SimplePortFactory, Action, Segment, Trigger, Wait } from './elements';
@@ -17,8 +8,8 @@ import { LinkFactory } from './elements/Link';
 import { RenderService } from './../services/RenderService';
 
 export class Application {
-  activeModel: DiagramModel;
-  diagramEngine: DiagramEngine;
+  activeModel;
+  diagramEngine;
 
   constructor(payload) {
     this.diagramEngine = new DiagramEngine();
@@ -64,11 +55,11 @@ export class Application {
     this.diagramEngine.registerNodeFactory(new Wait.NodeFactory());
   }
 
-  getActiveDiagram(): DiagramModel {
+  getActiveDiagram() {
     return this.activeModel;
   }
 
-  getDiagramEngine(): DiagramEngine {
+  getDiagramEngine() {
     return this.diagramEngine;
   }
 }

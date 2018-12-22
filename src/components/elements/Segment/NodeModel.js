@@ -1,6 +1,6 @@
 import { NodeModel as BaseNodeModel } from 'storm-react-diagrams';
-import { PortModel } from './PortModel';
 import * as _ from 'lodash';
+import { PortModel } from './PortModel';
 
 export class NodeModel extends BaseNodeModel {
   constructor(element) {
@@ -9,7 +9,6 @@ export class NodeModel extends BaseNodeModel {
     this.name = element.name;
     this.selectedSegment = element.selectedSegment;
 
-    // this.addPort(new PortModel("top"));
     this.addPort(new PortModel('left'));
     this.addPort(new PortModel('bottom'));
     this.addPort(new PortModel('right'));

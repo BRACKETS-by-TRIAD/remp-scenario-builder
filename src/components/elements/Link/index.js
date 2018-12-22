@@ -1,9 +1,4 @@
-import { LinkModel } from "./LinkModel";
-import { LinkFactory } from "./LinkFactory";
-// import { LinkWidget } from "./LinkWidget";
+import { LinkModel } from './LinkModel';
+import { LinkFactory } from './LinkFactory';
 
-export {
-	LinkModel,
-	LinkFactory,
-	// LinkWidget
-};
+export { LinkModel, LinkFactory };

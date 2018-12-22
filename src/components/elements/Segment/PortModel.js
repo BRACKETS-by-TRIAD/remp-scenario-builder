@@ -1,7 +1,7 @@
-import { LeftRightBottomPort} from './../Ports';
+import { LeftRightBottomPort } from './../Ports';
 
 export class PortModel extends LeftRightBottomPort {
-	constructor(position: string = "top") {
-		super(position, 'segment');
-	}
+  constructor(position = 'top') {
+    super(position, 'segment');
+  }
 }

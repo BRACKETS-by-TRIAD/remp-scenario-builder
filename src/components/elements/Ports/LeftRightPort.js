@@ -1,49 +1,44 @@
-import * as _ from "lodash";
-import { 
-	LinkModel as BaseLinkModel, 
-	DiagramEngine, 
-	PortModel as BasePortModel, 
-	// DefaultLinkModel 
-} from "storm-react-diagrams";
+import * as _ from 'lodash';
+import { PortModel as BasePortModel } from 'storm-react-diagrams';
 
 import { LinkModel } from './../Link';
 
 export class LeftRightPort extends BasePortModel {
-	in: boolean;
-	position: string | "left" | "right";
+  in;
+  position;
 
-	constructor(pos: string = "left", type: string) {
-        super(pos, type);
-        
-		this.position = pos;
-		this.in = this.position ===  "left";
-	}
-	
-	link(port: BasePortModel): BaseLinkModel {
-		let link = this.createLinkModel();
+  constructor(pos = 'left', type) {
+    super(pos, type);
 
-		link.setSourcePort(this);
-		link.setTargetPort(port);
+    this.position = pos;
+    this.in = this.position === 'left';
+  }
 
-		return link;
-	}
+  link(port) {
+    let link = this.createLinkModel();
 
-	canLinkToPort(port: BasePortModel): boolean {
-		return this.in !== port.in;
-	}
+    link.setSourcePort(this);
+    link.setTargetPort(port);
 
-	serialize() {
-		return _.merge(super.serialize(), {
-			position: this.position
-		});
-	}
+    return link;
+  }
 
-	deSerialize(data: any, engine: DiagramEngine) {
-		super.deSerialize(data, engine);
-		this.position = data.position;
-	}
+  canLinkToPort(port) {
+    return this.in !== port.in;
+  }
 
-	createLinkModel(): BaseLinkModel {
-		return new LinkModel();
-	}
+  serialize() {
+    return _.merge(super.serialize(), {
+      position: this.position
+    });
+  }
+
+  deSerialize(data, engine) {
+    super.deSerialize(data, engine);
+    this.position = data.position;
+  }
+
+  createLinkModel() {
+    return new LinkModel();
+  }
 }

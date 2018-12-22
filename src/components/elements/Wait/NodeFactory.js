@@ -1,4 +1,4 @@
-import { AbstractNodeFactory, DiagramEngine } from 'storm-react-diagrams';
+import { AbstractNodeFactory } from 'storm-react-diagrams';
 
 import NodeWidget from './NodeWidget';
 import { NodeModel } from './NodeModel';
@@ -9,10 +9,7 @@ export class NodeFactory extends AbstractNodeFactory {
     super('wait');
   }
 
-  generateReactWidget(
-    diagramEngine: DiagramEngine,
-    node: NodeModel
-  ): JSX.Element {
+  generateReactWidget(diagramEngine, node) {
     return (
       <NodeWidget
         diagramEngine={diagramEngine}

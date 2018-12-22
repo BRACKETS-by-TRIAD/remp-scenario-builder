@@ -1,29 +1,26 @@
-import {
-	DefaultLinkFactory
-} from "storm-react-diagrams";
-
-import * as React from "react";
+import * as React from 'react';
+import { DefaultLinkFactory } from 'storm-react-diagrams';
 
 import { LinkModel } from './LinkModel';
 
 export class LinkFactory extends DefaultLinkFactory {
-	constructor() {
-		super();
-		this.type = "custom";
-	}
+  constructor() {
+    super();
+    this.type = 'custom';
+  }
 
-	getNewInstance(initialConfig?: any): LinkModel {
-		return new LinkModel();
-	}
+  getNewInstance(initialConfig) {
+    return new LinkModel();
+  }
 
-	generateLinkSegment(model, widget, selected: boolean, path: string) {
-		return (
-			<path
-				className={selected ? widget.bem("--path-selected") : ""}
-				strokeWidth={model.width}
-				stroke={model.color}
-				d={path}
-			/>
-		);
-	}
+  generateLinkSegment(model, widget, selected, path) {
+    return (
+      <path
+        className={selected ? widget.bem('--path-selected') : ''}
+        strokeWidth={model.width}
+        stroke={model.color}
+        d={path}
+      />
+    );
+  }
 }

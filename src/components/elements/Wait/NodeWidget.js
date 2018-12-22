@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { PortWidget } from './../../widgets/PortWidget';
-// import WaitIcon from '@material-ui/icons/Timer';
 import WaitIcon from '@material-ui/icons/AccessAlarmsOutlined';
-import { NodeModel } from './NodeModel';
-
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -17,23 +13,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { setCanvasZoomingAndPanning } from '../../../actions';
+
+import { PortWidget } from './../../widgets/PortWidget';
 import StatisticsTooltip from '../../StatisticTooltip';
+import { setCanvasZoomingAndPanning } from '../../../actions';
 
-export interface NodeWidgetProps {
-  node: NodeModel;
-  className: string;
-  classBaseName: string;
-}
-
-export interface NodeWidgetState {}
-
-class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
-  static defaultProps: NodeWidgetProps = {
-    node: null
-  };
-
-  constructor(props: NodeWidgetProps) {
+class NodeWidget extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
       nodeFormWaitingTime: this.props.node.waitingTime,
@@ -44,7 +30,7 @@ class NodeWidget extends React.Component<NodeWidgetProps, NodeWidgetState> {
     };
   }
 
-  bem(selector: string): string {
+  bem(selector) {
     return (
       this.props.classBaseName +
       selector +

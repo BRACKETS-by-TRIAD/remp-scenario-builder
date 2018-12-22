@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import BodyWidget from './components/widgets/BodyWidget';
+import { Application } from './components/Application';
+import * as config from './config';
 import {
   fetchSegments,
   fetchTriggers,
@@ -8,13 +11,6 @@ import {
   setScenarioName,
   fetchMails
 } from './actions';
-
-// import logo from './logo.svg';
-import './App.css';
-
-import BodyWidget from './components/widgets/BodyWidget';
-import { Application } from './components/Application';
-import * as config from './config';
 
 class App extends Component {
   componentDidMount() {
