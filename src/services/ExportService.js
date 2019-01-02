@@ -96,12 +96,27 @@ export class ExportService {
         )
       };
     } else if (node.type === 'wait') {
+      let waitingTime = 0;
+      switch (node.waitingUnit) {
+        case 'minutes':
+          waitingTime = node.waitingTime;
+          break;
+        case 'hours':
+          waitingTime = node.waitingTime * 60;
+          break;
+        case 'days':
+          waitingTime = node.waitingTime * 60 * 24;
+          break;
+        default:
+          waitingTime = node.waitingTime;
+      }
+
       return {
         id: node.id,
         name: node.name ? node.name : '',
         type: 'wait',
         wait: {
-          [node.waitingUnit]: Number(node.waitingTime),
+          minutes: waitingTime,
           descendants: this.getAllChildrenNodes(node).map(descendantNode =>
             this.formatDescendant(descendantNode, node)
           )

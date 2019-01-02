@@ -83,17 +83,15 @@ export class RenderService {
         return nextNodes;
       });
     } else if (element.type === 'wait') {
-      if ('minutes' in element.wait) {
-        element.waitingTime = element.wait.minutes;
-        element.waitingUnit = 'minutes';
-      }
-      if ('hours' in element.wait) {
-        element.waitingTime = element.wait.hours;
-        element.waitingUnit = 'hours';
-      }
-      if ('days' in element.wait) {
-        element.waitingTime = element.wait.days;
+      if (element.wait.minutes % 1440 === 0) {
         element.waitingUnit = 'days';
+        element.waitingTime = element.wait.minutes / 1440;
+      } else if (element.wait.minutes % 60 === 0) {
+        element.waitingUnit = 'hours';
+        element.waitingTime = element.wait.minutes / 60;
+      } else {
+        element.waitingUnit = 'minutes';
+        element.waitingTime = element.wait.minutes;
       }
 
       node = new Wait.NodeModel(element);
