@@ -79,13 +79,6 @@
   }
 }
 
-.node-tooltip-loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
 .scenario-name {
   &:hover {
     cursor: pointer;
@@ -134,8 +127,7 @@
   align-items: center;
 }
 
-// just temporary styles
-.node-tooltip-wrapper {
+.node-tooltip-loader {
   display: flex;
   align-items: center;
   justify-content: center;

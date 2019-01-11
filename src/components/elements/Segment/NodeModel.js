@@ -4,7 +4,7 @@ import { PortModel } from './PortModel';
 
 export class NodeModel extends BaseNodeModel {
   constructor(element) {
-    super('segment');
+    super('segment', element.id);
 
     this.name = element.name;
     this.selectedSegment = element.selectedSegment;

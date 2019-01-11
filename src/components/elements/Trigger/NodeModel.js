@@ -4,7 +4,7 @@ import { PortModel } from './PortModel';
 
 export class NodeModel extends BaseNodeModel {
   constructor(element) {
-    super('trigger');
+    super('trigger', element.id);
 
     this.name = element.name;
     this.selectedTrigger = element.selectedTrigger;

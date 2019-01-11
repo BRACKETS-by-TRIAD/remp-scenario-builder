@@ -4,7 +4,7 @@ import { PortModel } from './PortModel';
 
 export class NodeModel extends BaseNodeModel {
   constructor(element) {
-    super('wait');
+    super('wait', element.id);
 
     this.name = element.name;
     this.waitingTime = element.waitingTime || 10;
