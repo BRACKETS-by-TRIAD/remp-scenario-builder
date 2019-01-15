@@ -56,7 +56,7 @@ class StatisticsTooltip extends React.Component {
   }
 
   render() {
-    const { anchorElement, scenarioID } = this.props;
+    const { anchorElement } = this.props;
     const { html } = this.state;
     if (!html) return null;
 

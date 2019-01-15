@@ -163,14 +163,12 @@ class NodeWidget extends React.Component {
               return false;
             }
           }}
+          fullWidth
         >
           <DialogTitle id='form-dialog-title'>Action node</DialogTitle>
 
           <DialogContent>
-            <DialogContentText>
-              TODO: popis To subscribe to this website, please enter your email
-              address here. We will send updates occasionally.
-            </DialogContentText>
+            <DialogContentText>Sends an email to user.</DialogContentText>
 
             <Grid container spacing={32}>
               <Grid item xs={6}>

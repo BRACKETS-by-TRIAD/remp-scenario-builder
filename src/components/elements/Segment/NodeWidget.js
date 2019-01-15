@@ -194,8 +194,10 @@ class NodeWidget extends React.Component {
 
           <DialogContent>
             <DialogContentText>
-              TODO: popis To subscribe to this website, please enter your email
-              address here. We will send updates occasionally.
+              Segments evaluate user's presence in a group of users defined by
+              system-provided conditions. Execution flow can be directed based
+              on presence/absence of user within the selected segment. You can
+              either pick one of the existing segments or create a new one.
             </DialogContentText>
 
             <Grid container spacing={32}>

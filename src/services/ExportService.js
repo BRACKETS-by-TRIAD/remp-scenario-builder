@@ -15,7 +15,6 @@ export class ExportService {
       .filter(node => node.type === 'trigger')
       .map(node => (payload.triggers[node.id] = this.formatNode(node)));
 
-    // TODO: map -> forEach
     Object.entries(this.model.getNodes()).forEach(node => {
       payload.visual[node[0]] = {
         x: node[1].x,
@@ -23,7 +22,6 @@ export class ExportService {
       };
     });
 
-    // TODO: map -> forEach
     Object.entries(this.model.getNodes()).forEach(node => {
       if (node[1].type !== 'trigger') {
         payload.elements[node[0]] = this.formatNode(node[1].serialize());

@@ -135,8 +135,9 @@ class NodeWidget extends React.Component {
 
           <DialogContent>
             <DialogContentText>
-              TODO: popis To subscribe to this website, please enter your email
-              address here. We will send updates occasionally.
+              Events are emitted on any change related to user. We recommend to
+              combine "before" events with "Wait" operations to achieve
+              execution at any desired time.
             </DialogContentText>
 
             <Grid container spacing={32}>

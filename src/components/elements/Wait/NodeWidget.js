@@ -125,8 +125,8 @@ class NodeWidget extends React.Component {
           <DialogTitle id='form-dialog-title'>Wait node</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              TODO: popis To subscribe to this website, please enter your email
-              address here. We will send updates occasionally.
+              Postpones the execution of next node in flow by selected amount of
+              time.
             </DialogContentText>
 
             <Grid container spacing={32}>
