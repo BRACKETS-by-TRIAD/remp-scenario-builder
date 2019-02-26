@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import SegmenterService from './services/SegmenterService';
 import BodyWidget from './components/widgets/BodyWidget';
 import { Application } from './components/Application';
 import * as config from './config';
@@ -25,6 +26,8 @@ class App extends Component {
     } else {
       dispatch(setScenarioName('Unnamed scenario'));
     }
+
+    SegmenterService.load();
   }
 
   render() {

@@ -16,7 +16,8 @@ const styles = theme => ({
     flexGrow: 1,
     // height: 250
     marginTop: '10px',
-    marginBottom: '10px'
+    marginBottom: '10px',
+    fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
   },
   input: {
     display: 'flex',

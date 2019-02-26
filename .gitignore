@@ -22,4 +22,4 @@ yarn-error.log*
 *.sln
 *.sw*
 
-env.js
+/public/segmenter

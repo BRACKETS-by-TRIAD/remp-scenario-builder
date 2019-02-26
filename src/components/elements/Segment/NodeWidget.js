@@ -11,12 +11,15 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Icon from '@material-ui/core/Icon';
 import groupBy from 'lodash/groupBy';
 
 import StatisticsTooltip from '../../StatisticTooltip';
 import { PortWidget } from './../../widgets/PortWidget';
 import MaterialSelect from '../../MaterialSelect';
 import { setCanvasZoomingAndPanning } from '../../../actions';
+import SegmenterService from '../../../services/SegmenterService';
+import { fetchSegments } from '../../../actions';
 
 class NodeWidget extends React.Component {
   constructor(props) {
@@ -25,7 +28,8 @@ class NodeWidget extends React.Component {
       nodeFormName: this.props.node.name,
       selectedSegment: this.props.node.selectedSegment,
       dialogOpened: false,
-      anchorElementForTooltip: null
+      anchorElementForTooltip: null,
+      creatingNewSegment: false
     };
   }
 
@@ -117,6 +121,36 @@ class NodeWidget extends React.Component {
     return selected ? ` - ${selected.name}` : '';
   };
 
+  handleNewSegmentClick = () => {
+    window.addEventListener('savedSegment', this.handleSavedNewSegment);
+    window.addEventListener('canceledNewSegment', this.handleCancelNewSegment);
+    this.setState({ creatingNewSegment: true });
+    setTimeout(() => {
+      SegmenterService.init();
+    });
+  };
+
+  handleSavedNewSegment = event => {
+    this.props.dispatch(fetchSegments());
+    this.setState({
+      selectedSegment: event.detail.code,
+      creatingNewSegment: false
+    });
+    this.props.node.name = this.state.nodeFormName;
+    this.props.node.selectedSegment = this.state.selectedSegment;
+    this.props.diagramEngine.repaintCanvas();
+    this.closeDialog();
+    window.removeEventListener('savedSegment', this.handleSavedNewSegment);
+  };
+
+  handleCancelNewSegment = event => {
+    this.setState({ creatingNewSegment: false });
+    window.removeEventListener(
+      'canceledNewSegment',
+      this.handleSavedNewSegment
+    );
+  };
+
   render() {
     return (
       <div
@@ -189,76 +223,109 @@ class NodeWidget extends React.Component {
               return false;
             }
           }}
+          fullScreen={this.state.creatingNewSegment}
+          disableEscapeKeyDown={this.state.creatingNewSegment}
         >
-          <DialogTitle id='form-dialog-title'>Segment node</DialogTitle>
+          {!this.state.creatingNewSegment && (
+            <>
+              <DialogTitle id='form-dialog-title'>Segment node</DialogTitle>
 
-          <DialogContent>
-            <DialogContentText>
-              Segments evaluate user's presence in a group of users defined by
-              system-provided conditions. Execution flow can be directed based
-              on presence/absence of user within the selected segment. You can
-              either pick one of the existing segments or create a new one.
-            </DialogContentText>
+              <DialogContent>
+                <DialogContentText>
+                  Segments evaluate user's presence in a group of users defined
+                  by system-provided conditions. Execution flow can be directed
+                  based on presence/absence of user within the selected segment.
+                  You can either pick one of the existing segments or create a
+                  new one.
+                </DialogContentText>
 
-            <Grid container spacing={32}>
-              <Grid item xs={6}>
-                <TextField
-                  margin='normal'
-                  id='segment-name'
-                  label='Node name'
-                  fullWidth
-                  value={this.state.nodeFormName}
-                  onChange={event => {
-                    this.setState({
-                      nodeFormName: event.target.value
-                    });
-                  }}
-                />
-              </Grid>
-            </Grid>
+                <Grid container spacing={32}>
+                  <Grid item xs={6}>
+                    <TextField
+                      margin='normal'
+                      id='segment-name'
+                      label='Node name'
+                      fullWidth
+                      value={this.state.nodeFormName}
+                      onChange={event => {
+                        this.setState({
+                          nodeFormName: event.target.value
+                        });
+                      }}
+                    />
+                  </Grid>
+                </Grid>
 
-            <Grid container spacing={32}>
-              <Grid item xs={12}>
-                <MaterialSelect
-                  options={this.transformOptionsForSelect()}
-                  value={this.getFormatedValue()}
-                  onChange={event => {
-                    this.setState({
-                      selectedSegment: event.value
-                    });
-                  }}
-                  placeholder='Pick one'
-                  label='Selected Segment'
-                />
-              </Grid>
-            </Grid>
-          </DialogContent>
+                <Grid container spacing={32} alignItems='flex-end'>
+                  <Grid item xs={8}>
+                    <MaterialSelect
+                      options={this.transformOptionsForSelect()}
+                      value={this.getFormatedValue()}
+                      onChange={event => {
+                        console.log(event.value);
+                        this.setState({
+                          selectedSegment: event.value
+                        });
+                      }}
+                      placeholder='Pick one'
+                      label='Selected Segment'
+                    />
+                  </Grid>
+                  {window.RempSegmenter && (
+                    <Grid item xs={4}>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        size='small'
+                        style={{ position: 'relative', bottom: '10px' }}
+                        onClick={this.handleNewSegmentClick}
+                      >
+                        <Icon style={{ marginRight: '5px' }}>add_circle</Icon>
+                        New segment
+                      </Button>
+                    </Grid>
+                  )}
+                </Grid>
+              </DialogContent>
+            </>
+          )}
 
-          <DialogActions>
-            <Button
-              color='secondary'
-              onClick={() => {
-                this.closeDialog();
-              }}
-            >
-              Cancel
-            </Button>
+          {this.state.creatingNewSegment && (
+            <DialogContent>
+              <div
+                id='segmenter'
+                style={{ position: 'fixed', zIndex: '99999999' }}
+              />
+            </DialogContent>
+          )}
 
-            <Button
-              color='primary'
-              onClick={() => {
-                // https://github.com/projectstorm/react-diagrams/issues/50 huh
+          {!this.state.creatingNewSegment && (
+            <DialogActions>
+              <Button
+                color='secondary'
+                onClick={() => {
+                  this.closeDialog();
+                }}
+              >
+                Cancel
+              </Button>
 
-                this.props.node.name = this.state.nodeFormName;
-                this.props.node.selectedSegment = this.state.selectedSegment;
+              <Button
+                color='primary'
+                onClick={() => {
+                  // https://github.com/projectstorm/react-diagrams/issues/50 huh
 
-                this.props.diagramEngine.repaintCanvas();
-                this.closeDialog();
-              }}
-            >
-              Save changes
-            </Button>
-          </DialogActions>
+                  this.props.node.name = this.state.nodeFormName;
+                  this.props.node.selectedSegment = this.state.selectedSegment;
+
+                  this.props.diagramEngine.repaintCanvas();
+                  this.closeDialog();
+                }}
+              >
+                Save changes
+              </Button>
+            </DialogActions>
+          )}
         </Dialog>
       </div>
     );
@@ -266,10 +333,11 @@ class NodeWidget extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { segments } = state;
+  const { segments, dispatch } = state;
 
   return {
-    segments: segments.avalaibleSegments
+    segments: segments.avalaibleSegments,
+    dispatch
   };
 }
 
