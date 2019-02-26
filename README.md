@@ -38,7 +38,7 @@ window.Segments = {
 Here are some implementation details for future reference:
 
 - Source files of remp-segment-builder and vue need to be present in `/public/segmenter` folder.
-- There is a npm script `npm run copy:segmenter` for convenience prepared, which will copy them from node_modules.
+- There is a npm script `npm run copy:segmenter` for convenience prepared, which will copy them from node_modules. This script is also automatically called before `npm run start` and `npm run build` to ensure, that it's never forgotten.
 - During application bootstrap `SegmenterService.load()` is called to append script/link tags of remp-segment-builder with vue to the html document.
   This is to avoid making complicated custom webpack config file to compile both react and vue.
 - In `src/components/elements/Segment/NodeWidget.js` upon clicking on New Segment button, `SegmenterService.init()` is called to bootstrap remp-segment-builder application. Then we listen for dispatched custom event called `savedSegment` from remp-segment-builder. If `window.Segments.config.CANCEL_PATH` is set to url, then upon clicking cancel in remp-segment-builder, user will be redirected there. If it is set to `#`, remp-segment-builder will be closed, and user can continue in remp-scenario-builder. This is suggested for this usecase.
