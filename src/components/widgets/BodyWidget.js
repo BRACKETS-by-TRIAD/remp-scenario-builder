@@ -23,7 +23,7 @@ import * as config from './../../config';
 import { TrayItemWidget } from './TrayItemWidget';
 import { ExportService } from './../../services/ExportService';
 import Notification from '../Notification';
-import { Action, Segment, Trigger, Wait } from './../elements';
+import { Email, Segment, Trigger, Wait } from './../elements';
 import {
   setScenarioId,
   setScenarioName,
@@ -243,7 +243,7 @@ class BodyWidget extends React.Component {
               subheader={<ListSubheader component='div'>Actions</ListSubheader>}
             >
               <TrayItemWidget
-                model={{ type: 'action' }}
+                model={{ type: 'email' }}
                 name='Send email'
                 icon={<ActionIcon />}
               />
@@ -294,8 +294,8 @@ class BodyWidget extends React.Component {
                 // ).length;
 
                 var node = null;
-                if (data.type === 'action') {
-                  node = new Action.NodeModel({});
+                if (data.type === 'email') {
+                  node = new Email.NodeModel({});
                 } else if (data.type === 'segment') {
                   node = new Segment.NodeModel({});
                 } else if (data.type === 'trigger') {

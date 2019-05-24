@@ -49,16 +49,14 @@ export class ExportService {
   }
 
   formatNode(node) {
-    if (node.type === 'action') {
+    console.log(node.type);
+    if (node.type === 'email') {
       return {
         id: node.id,
         name: node.name ? node.name : '',
-        type: 'action',
-        action: {
-          type: 'email',
-          email: {
-            code: node.selectedMail
-          },
+        type: 'email',
+        email: {
+          code: node.selectedMail,
           descendants: this.getAllChildrenNodes(node).map(descendantNode =>
             this.formatDescendant(descendantNode, node)
           )

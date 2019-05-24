@@ -1,12 +1,12 @@
 $nodeColor: $lightViolet;
 
 .srd-node--selected {
-  .square-node.action-node .node-container {
+  .square-node.email-node .node-container {
     box-shadow: 0 0 10px $nodeColor;
   }
 }
 
-.action-node {
+.email-node {
   .node-container {
     border: solid 2px $nodeColor;
     color: $nodeColor;
