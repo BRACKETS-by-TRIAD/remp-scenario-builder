@@ -11,7 +11,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import groupBy from 'lodash/groupBy';
 
-import { PortWidget } from './../../widgets/PortWidget';
+import { PortWidget } from '../../widgets/PortWidget';
 import StatisticsTooltip from '../../StatisticTooltip';
 import MaterialSelect from '../../MaterialSelect';
 import { setCanvasZoomingAndPanning } from '../../../actions';
@@ -165,7 +165,7 @@ class NodeWidget extends React.Component {
           }}
           fullWidth
         >
-          <DialogTitle id='form-dialog-title'>Action node</DialogTitle>
+          <DialogTitle id='form-dialog-title'>Email node</DialogTitle>
 
           <DialogContent>
             <DialogContentText>Sends an email to user.</DialogContentText>

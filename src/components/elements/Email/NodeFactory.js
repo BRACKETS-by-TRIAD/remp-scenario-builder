@@ -6,7 +6,7 @@ import { NodeModel } from './NodeModel';
 
 export class NodeFactory extends AbstractNodeFactory {
   constructor() {
-    super('action');
+    super('email');
   }
 
   generateReactWidget(diagramEngine, node) {
@@ -15,7 +15,7 @@ export class NodeFactory extends AbstractNodeFactory {
         diagramEngine={diagramEngine}
         node={node}
         classBaseName='square-node'
-        className='action-node'
+        className='email-node'
       />
     );
   }

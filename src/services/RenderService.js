@@ -1,7 +1,7 @@
 import flatMap from 'lodash/flatMap';
 
 // import the custom models
-import { Action, Segment, Trigger, Wait } from './../components/elements';
+import { Email, Segment, Trigger, Wait } from './../components/elements';
 
 export class RenderService {
   constructor(activeModel, payload = {}) {
@@ -39,11 +39,11 @@ export class RenderService {
 
         return nextNodes;
       });
-    } else if (element.type === 'action') {
-      element.selectedMail = element.action.email.code;
-      node = new Action.NodeModel(element);
+    } else if (element.type === 'email') {
+      element.selectedMail = element.email.code;
+      node = new Email.NodeModel(element);
 
-      nodes = element.action.descendants.flatMap(descendantObj => {
+      nodes = element.email.descendants.flatMap(descendantObj => {
         const element = this.payload.elements[descendantObj.uuid];
         const visual = this.payload.visual[element.id];
 

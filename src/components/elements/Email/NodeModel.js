@@ -4,7 +4,7 @@ import { PortModel } from './PortModel';
 
 export class NodeModel extends BaseNodeModel {
   constructor(element) {
-    super('action', element.id);
+    super('email', element.id);
 
     this.name = element.name;
     this.selectedMail = element.selectedMail;
