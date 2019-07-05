@@ -276,8 +276,6 @@ class BodyWidget extends React.Component {
           />
 
           <main className={classes.content}>
-            <div className={classes.toolbar} />
-
             <div
               className='diagram-layer'
               onDrop={event => {
